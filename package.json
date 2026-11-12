@@ -1,0 +1,1 @@
+{ "name": "pulpit", "version": "1.0.0", "dependencies": { "node-ical": "^0.20.1" } }

@@ -3,98 +3,92 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f4f1ea">
+<meta name="theme-color" content="#0a0d10">
 <title>Pulpit</title>
-<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--font:'Comic Neue','Comic Sans MS',cursive,sans-serif;--paper:#f4f1ea;--ink:#111;--red:#e63b2e;--blue:#1f4fd8;--yellow:#ffc933;--green:#1a9e55;--mute:#6b675d}
-@media(prefers-color-scheme:dark){:root{--paper:#121212;--ink:#f4f1ea;--mute:#a09b8e}}
+:root{color-scheme:dark;--font:'Comic Neue','Comic Sans MS',cursive,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;--bg:#0a0d10;--pn:#10151a;--bd:#222b35;--tx:#e8eaed;--mu:#8b95a1;--g:#2ecc71;--y:#ffc933;--r:#ff5a4d;--b:#4d7cff}
 *{box-sizing:border-box;margin:0}
-body{font-family:var(--font);background:var(--paper);color:var(--ink);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);line-height:1.35}
-main{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr}
-@media(min-width:900px){main{grid-template-columns:400px 1fr}.wide{grid-column:1/3}}
-section{border:3px solid var(--ink);margin:-3px 0 0 -3px;padding:16px;overflow:hidden}
-h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;font-weight:700}
-.head{background:var(--yellow);color:#111;position:relative;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
-.head b{font-size:clamp(44px,11vw,78px);line-height:.95;position:relative}
-.head span{font-size:18px;position:relative}
-.head svg{position:absolute;right:0;top:0;height:100%;width:60%}
-.srch{display:flex;flex-wrap:wrap;gap:6px}
-.btn{font-weight:700;border:3px solid var(--red);background:var(--red);color:#fff;padding:6px 12px;text-decoration:none;display:flex;align-items:center}
-.srch input{flex:1 1 200px}
-input{font:inherit;min-width:0;padding:10px;border:3px solid var(--ink);background:transparent;color:inherit;border-radius:0;font-size:17px}
-button{font:inherit;font-weight:700;border:3px solid var(--ink);background:transparent;color:var(--ink);padding:6px 12px;cursor:pointer;border-radius:0}
-button.on{background:var(--ink);color:var(--paper)}
-.wx{background:var(--blue);color:#fff;border-color:var(--ink)}
-.wx .now{display:flex;align-items:center;gap:14px}
-.wx .t{font-size:68px;font-weight:700;line-height:1}
-.wx .d{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
-.wx .d div{border-top:3px solid #fff;padding-top:6px;font-size:14px}
-.wx .d svg{width:34px;height:34px;display:block;margin-bottom:2px}
-.strip{display:grid;gap:14px}
-.sun svg{width:100%;max-width:260px;display:block}
-.aqi{display:grid;grid-template-columns:repeat(6,1fr);height:12px;margin:8px 0 4px;position:relative}
-.aqi i{display:block}
-.aqi u{position:absolute;top:-5px;width:6px;height:22px;background:var(--ink);border:2px solid var(--paper)}
-.al{padding:8px;border:3px solid var(--ink);font-weight:700}
-.al.w{background:var(--red);color:#fff;border-color:var(--red)}
-.cal .dy{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.08em;margin:10px 0 4px;color:var(--red)}
-.cal .ev{display:flex;gap:10px;padding:6px 0;border-bottom:2px solid var(--ink)}
-.cal .ev b{min-width:48px}
-.bus{background:var(--red);color:#fff}
-.bus svg{width:100%;max-height:70px;margin-bottom:10px}
-.bus a{display:block;text-decoration:none;color:#fff;border:3px solid #fff;padding:10px;font-weight:700;margin-top:6px}
-.bus a:hover{background:#fff;color:var(--red)}
-.mk table{width:100%;border-collapse:collapse}
-.mk td{padding:6px 0;border-bottom:2px solid var(--ink);font-size:16px}
-.mk td:last-child,.mk td:nth-child(2){text-align:right}
-.up{color:var(--green);font-weight:700}.dn{color:var(--red);font-weight:700}
-.mk h3{font-size:13px;margin:12px 0 2px;color:var(--mute)}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.chips button{padding:4px 10px;font-size:14px}
-.chips button.on{background:var(--red);border-color:var(--red);color:#fff}
-.news a{display:flex;gap:12px;text-decoration:none;color:inherit;padding:10px 0;border-bottom:2px solid var(--ink)}
-.news a:hover b{background:var(--yellow);color:#111}
-.news img{width:92px;height:92px;object-fit:cover;flex:none;border:3px solid var(--ink);background:var(--yellow)}
-.news .big{flex-direction:column}
-.news .big img{width:100%;height:auto;aspect-ratio:16/9}
-.news b{font-size:18px;line-height:1.25}
-.news small{display:block;color:var(--mute);font-size:13px;margin-top:2px}
-.news .n::before{content:"";display:inline-block;width:10px;height:10px;background:var(--red);margin-right:6px}
-.lk h3{font-size:13px;margin:14px 0 6px;color:var(--mute)}
-.lk .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
-.lk a{border:3px solid var(--ink);padding:8px;text-decoration:none;color:inherit;font-weight:700}
-.lk a:hover{background:var(--ink);color:var(--paper)}
-.lk .all{display:block;margin-top:14px;background:var(--red);border-color:var(--red);color:#fff;width:100%;padding:12px}
-.sm{font-size:13px;color:var(--mute)}.err{color:var(--red);font-size:14px}
+body{font-family:var(--font);background:var(--bg);color:var(--tx);line-height:1.35;padding-bottom:env(safe-area-inset-bottom)}
+.top{position:sticky;top:0;z-index:5;background:rgba(10,13,16,.95);border-bottom:1px solid var(--bd);display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:calc(8px + env(safe-area-inset-top)) 12px 8px}
+.logo{font:700 14px var(--mono);letter-spacing:.2em}
+.dt{font-size:15px}.dt small{color:var(--y);margin-left:8px}
+.clk{font:700 15px var(--mono);margin-left:auto}
+.btn{font:700 12px var(--mono);letter-spacing:.06em;color:#fff;background:var(--r);padding:6px 10px;text-decoration:none;border-radius:2px}
+.grid{display:grid;gap:10px;padding:10px;max-width:1500px;margin:0 auto}
+@media(min-width:1000px){.grid{grid-template-columns:340px minmax(0,1fr) 340px;align-items:start}}
+.col{display:grid;gap:10px;min-width:0}
+.p{background:var(--pn);border:1px solid var(--bd);border-radius:2px;min-width:0}
+.p>header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--bd)}
+h2{font:700 11px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.pill{font:11px var(--mono);font-style:normal;color:var(--g);border:1px solid #1f5a3a;background:#0f2a1c;padding:1px 8px;border-radius:2px}
+.b{padding:12px}.sm{font-size:13px;color:var(--mu)}.err{color:var(--r);font-size:13px}
+.mx{font-size:19px;line-height:1.3}.mx small{display:block;margin-top:6px;color:var(--y);font:12px var(--mono)}
+.now{display:flex;align-items:center;gap:14px}.now .t{font:700 54px var(--mono);line-height:1}
+.d{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.d div{border-top:1px solid var(--bd);padding-top:8px;font-size:14px}.d svg{width:34px;height:34px;display:block;margin-bottom:2px}
+.sun svg{width:100%;max-width:260px;display:block;color:var(--mu)}
+.aqi{display:grid;grid-template-columns:repeat(6,1fr);height:10px;margin:10px 0 6px;position:relative}.aqi i{display:block}
+.aqi u{position:absolute;top:-5px;width:4px;height:20px;background:#fff}
+.al{padding:8px;border:1px solid var(--bd);margin-top:8px;font-size:14px}.al.w{border-color:var(--r);color:var(--r);font-weight:700}
+.ev{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--bd)}.ev b{min-width:52px;font:700 12px var(--mono);color:var(--y)}
+.dy{font:700 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin:10px 0 2px}
+.lnk a{display:block;border:1px solid var(--bd);padding:9px 10px;margin-top:6px;color:var(--tx);text-decoration:none;font-weight:700;border-radius:2px}
+.lnk a:hover{border-color:var(--y);color:var(--y)}
+.bus svg{width:100%;max-height:64px;margin-bottom:6px}
+table{width:100%;border-collapse:collapse}td{padding:6px 0;border-bottom:1px solid var(--bd);font-size:15px}
+td:nth-child(n+2){text-align:right;font-family:var(--mono);font-size:13px}td:last-child{width:88px}
+.up{color:var(--g)}.dn{color:var(--r)}h3{font:700 11px var(--mono);color:var(--mu);letter-spacing:.1em;margin:12px 0 2px;text-transform:uppercase}
+.tiles{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.tiles button{font:12px var(--mono);border:1px solid var(--bd);border-left:3px solid var(--tc);background:transparent;color:var(--mu);padding:4px 8px;border-radius:2px;cursor:pointer;text-decoration:line-through}
+.tiles button.on{color:var(--tx);background:#161d25;text-decoration:none}
+.tiles button.x{opacity:.4;cursor:default}.tiles .ac{border-left-color:var(--bd);color:var(--y);text-decoration:none}
+.nl{max-height:78vh;overflow:auto}
+.nl a{display:flex;gap:12px;color:inherit;text-decoration:none;padding:10px 0;border-bottom:1px solid var(--bd)}
+.nl a:hover b{color:var(--y)}
+.nl img{width:92px;height:92px;object-fit:cover;flex:none;border:1px solid var(--bd);background:#161d25;border-radius:2px}
+.nl .big{flex-direction:column}.nl .big img{width:100%;height:auto;aspect-ratio:16/9}
+.nl b{font-size:18px;line-height:1.25}.nl small{display:block;color:var(--mu);font:12px var(--mono);margin-top:3px}
+.nl .n::before{content:"";display:inline-block;width:8px;height:8px;background:var(--g);margin-right:6px}
+.hs div{padding:6px 0;border-bottom:1px solid var(--bd);font-size:14px}.hs b{font:700 12px var(--mono);color:var(--y);margin-right:6px}
+.lk{grid-column:1/-1}.lk .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.lk a{border:1px solid var(--bd);padding:8px;color:var(--tx);text-decoration:none;font-weight:700;border-radius:2px}.lk a:hover{border-color:var(--y);color:var(--y)}
+.lk .all{width:100%;margin-top:12px;padding:12px;font:700 13px var(--mono);background:var(--r);border:0;color:#fff;cursor:pointer;border-radius:2px}
 </style>
 </head>
 <body>
-<main>
-<section class="head wide">
-<svg viewBox="0 0 300 150" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><circle cx="230" cy="60" r="52" fill="#e63b2e"/><rect x="120" y="70" width="90" height="90" fill="#1f4fd8"/><polygon points="250,150 300,40 300,150" fill="#111"/><rect x="170" y="10" width="14" height="60" fill="#111"/></svg>
-<b id="dz"></b><span id="dm"></span><span id="im"></span></section>
-<section class="wide"><div class="srch"><input id="q" placeholder="Szukaj…" autocomplete="off"><button class="on" data-m="g">Google</button><button data-m="p">Perplexity</button><button data-m="n">Wiadomości</button><a class="btn" href="https://polskieradio24.pl/" target="_blank" rel="noopener">▶ Polskie Radio 24</a></div></section>
-<div>
-<section class="wx"><h2>Pogoda · Piotrków Tryb.</h2><div id="wx">Ładuję…</div></section>
-<section><h2>Bieg dnia</h2><div class="strip"><div class="sun" id="sun"></div><div id="aq"></div><div id="al"></div></div></section>
-<section class="cal"><h2>Kalendarz</h2><div id="cal">Ładuję…</div></section>
-<section class="bus"><h2>Autobusy</h2>
-<svg viewBox="0 0 240 70" aria-hidden="true"><rect x="10" y="8" width="200" height="44" fill="#fff"/><rect x="20" y="16" width="30" height="18" fill="#1f4fd8"/><rect x="58" y="16" width="30" height="18" fill="#1f4fd8"/><rect x="96" y="16" width="30" height="18" fill="#1f4fd8"/><rect x="134" y="16" width="30" height="18" fill="#1f4fd8"/><rect x="172" y="12" width="30" height="40" fill="#ffc933"/><circle cx="52" cy="54" r="10" fill="#111"/><circle cx="168" cy="54" r="10" fill="#111"/><rect x="10" y="40" width="160" height="4" fill="#e63b2e"/></svg>
-<a href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">Kostromska – Belzacka · odjazdy na żywo →</a>
-<a href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład jazdy MZK →</a></section>
-<section class="mk"><h2>Waluty i akcje</h2><div id="mk">Ładuję…</div></section>
+<div class="top"><span class="logo">PULPIT</span><span class="pill">NA ŻYWO</span><span class="dt"><span id="dt"></span><small id="im"></small></span><a class="btn" href="https://polskieradio24.pl/" target="_blank" rel="noopener">▶ POLSKIE RADIO 24</a><span class="clk" id="ck"></span></div>
+<div class="grid">
+<div class="col">
+<section class="p"><header><h2>Maksyma dnia</h2></header><div class="b mx" id="mx"></div></section>
+<section class="p"><header><h2>Pogoda · Piotrków</h2></header><div class="b" id="wx">Ładuję…</div></section>
+<section class="p"><header><h2>Bieg dnia</h2></header><div class="b"><div class="sun" id="sun"></div><div id="aq"></div><div id="al"></div></div></section>
+<section class="p bus"><header><h2>Autobusy</h2><em class="pill">KOSTROMSKA – BELZACKA</em></header><div class="b lnk">
+<svg viewBox="0 0 240 70" aria-hidden="true"><rect x="10" y="8" width="200" height="44" fill="#e8eaed"/><rect x="20" y="16" width="30" height="18" fill="#4d7cff"/><rect x="58" y="16" width="30" height="18" fill="#4d7cff"/><rect x="96" y="16" width="30" height="18" fill="#4d7cff"/><rect x="134" y="16" width="30" height="18" fill="#4d7cff"/><rect x="172" y="12" width="30" height="40" fill="#ffc933"/><circle cx="52" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><circle cx="168" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><rect x="10" y="40" width="160" height="4" fill="#ff5a4d"/></svg>
+<a href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">Odjazdy na żywo →</a>
+<a href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład jazdy MZK →</a></div></section>
+<section class="p"><header><h2>Kamery</h2></header><div class="b lnk"><a href="https://go.toya.net.pl/25-kamery" target="_blank" rel="noopener">TOYA · kamery miejskie →</a><a href="https://www.windy.com/webcams/1621006350" target="_blank" rel="noopener">Rynek Trybunalski (Windy) →</a></div></section>
 </div>
-<section class="news"><h2>Wiadomości</h2><div class="chips" id="ch"></div><div id="nw">Ładuję…</div></section>
-<section class="lk wide"><h2>Szybkie linki</h2><div id="lk"></div></section>
-</main>
+<div class="col">
+<section class="p"><header><h2>Wiadomości</h2><em class="pill" id="nc"></em></header><div class="b"><div class="tiles" id="tl"></div><div class="nl" id="nw">Ładuję…</div></div></section>
+</div>
+<div class="col">
+<section class="p"><header><h2>Kalendarz</h2></header><div class="b" id="cal">Ładuję…</div></section>
+<section class="p"><header><h2>Waluty i akcje</h2><em class="pill" id="mt"></em></header><div class="b" id="mk">Ładuję…</div></section>
+<section class="p"><header><h2>Dziś w historii</h2></header><div class="b hs" id="hs">Ładuję…</div></section>
+</div>
+<section class="p lk"><header><h2>Szybkie linki</h2></header><div class="b" id="lk"></div></section>
+</div>
 <script>
 const $=id=>document.getElementById(id),now=new Date();
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
-fetch('https://nameday.abalin.net/api/V1/today?country=pl&timezone=Europe/Warsaw').then(r=>r.json()).then(j=>{const d=j.data||j,n=d.name_pl||(d.namedays&&d.namedays.pl)||d.name;if(n)$('im').textContent='Imieniny: '+n}).catch(()=>{});
 const hm=d=>new Date(d).toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'});
-$('dz').textContent=now.toLocaleDateString('pl-PL',{day:'numeric',month:'long'});
-$('dm').textContent=now.toLocaleDateString('pl-PL',{weekday:'long',year:'numeric'});
+$('dt').textContent=now.toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const tick=()=>$('ck').textContent=new Date().toLocaleTimeString('pl-PL');tick();setInterval(tick,1000);
+fetch('https://nameday.abalin.net/api/V1/today?country=pl&timezone=Europe/Warsaw').then(r=>r.json()).then(j=>{const d=j.data||j,n=d.name_pl||(d.namedays&&d.namedays.pl)||d.name;if(n)$('im').textContent='Imieniny: '+n}).catch(()=>{});
+const MX=[['Nie dlatego nie ważymy się, że to trudne. Trudne jest to, że się nie ważymy.','Seneka'],['Nie rzeczy same niepokoją ludzi, lecz sądy o rzeczach.','Epiktet'],['Gdy odkładamy, życie ucieka.','Seneka (Dum differtur, vita transcurrit)'],['Póki oddycham, mam nadzieję.','Cyceron (Dum spiro, spero)'],['Śpiesz się powoli.','Festina lente'],['Chwytaj dzień, jak najmniej ufając przyszłości.','Horacy (Carpe diem)'],['Sztuka długa, życie krótkie.','Ars longa, vita brevis'],['Nie rozpaczaj.','Horacy (Nil desperandum)'],['Przez trudy do gwiazd.','Per aspera ad astra'],['Nie od razu Kraków zbudowano.','Przysłowie'],['Bez pracy nie ma kołaczy.','Przysłowie'],['Lepszy wróbel w garści niż gołąb na dachu.','Przysłowie'],['Kuj żelazo, póki gorące.','Przysłowie'],['Lepiej późno niż wcale.','Przysłowie'],['Cicha woda brzegi rwie.','Przysłowie'],['Jak sobie pościelisz, tak się wyśpisz.','Przysłowie'],['Mądrej głowie dość dwie słowie.','Przysłowie'],['Apetyt rośnie w miarę jedzenia.','Przysłowie'],['Kto rano wstaje, temu Pan Bóg daje.','Przysłowie'],['Darowanemu koniowi w zęby się nie zagląda.','Przysłowie'],['Raz kozie śmierć.','Przysłowie'],['Wolnoć Tomku w swoim domku.','Przysłowie'],['Pośpiech jest wskazany tylko przy łapaniu pcheł.','Przysłowie'],['Czas to pieniądz.','Przysłowie'],['Błądzić jest rzeczą ludzką.','Errare humanum est'],['Kto chce wszystkiego, traci wszystko.','Qui totum vult, totum perdit'],['Pamiętaj o śmierci.','Memento mori'],['Poznaj samego siebie.','Napis w Delfach']];
+const dy=Math.floor((now-new Date(now.getFullYear(),0,0))/864e5),mx=MX[dy%MX.length];
+$('mx').textContent='„'+mx[0]+'”';$('mx').append(el('small','',mx[1]));
 const S='fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"';
 const CL='<path d="M20 44h30a10 10 0 0 0 0-20 14 14 0 0 0-27-3A12 12 0 0 0 20 44z" fill="#fff" stroke="#111" stroke-width="3"/>';
 function ic(c){
@@ -103,18 +97,18 @@ function ic(c){
   if(c<=48)return '<svg viewBox="0 0 64 64"><g transform="translate(6 6)">'+CL+'</g></svg>';
   if(c>=95)return '<svg viewBox="0 0 64 64"><g transform="translate(6 0)">'+CL+'</g><path d="M34 40l-8 12h7l-3 10 12-15h-8l4-7z" fill="#ffc933" stroke="#111" stroke-width="2"/></svg>';
   if(c>=71&&c<=77||c>=85)return '<svg viewBox="0 0 64 64"><g transform="translate(6 0)">'+CL+'</g><g fill="#fff" stroke="#111" stroke-width="2"><circle cx="22" cy="52" r="3"/><circle cx="34" cy="58" r="3"/><circle cx="46" cy="52" r="3"/></g></svg>';
-  return '<svg viewBox="0 0 64 64"><g transform="translate(6 0)">'+CL+'</g><g '+S+' style="color:#ffc933"><path d="M22 50l-3 8M34 50l-3 8M46 50l-3 8"/></g></svg>';
+  return '<svg viewBox="0 0 64 64"><g transform="translate(6 0)">'+CL+'</g><g '+S+' style="color:#4d7cff"><path d="M22 50l-3 8M34 50l-3 8M46 50l-3 8"/></g></svg>';
 }
 const WMO={0:'Bezchmurnie',1:'Prawie bezchmurnie',2:'Częściowe zachmurzenie',3:'Pochmurno',45:'Mgła',48:'Mgła',51:'Mżawka',53:'Mżawka',55:'Mżawka',61:'Deszcz',63:'Deszcz',65:'Silny deszcz',71:'Śnieg',73:'Śnieg',75:'Silny śnieg',80:'Przelotny deszcz',81:'Przelotny deszcz',82:'Ulewa',95:'Burza',96:'Burza z gradem',99:'Burza z gradem'};
 fetch('https://api.open-meteo.com/v1/forecast?latitude=51.405&longitude=19.703&current=temperature_2m,weather_code,wind_speed_10m,apparent_temperature&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset,wind_gusts_10m_max,precipitation_sum,snowfall_sum&timezone=Europe%2FWarsaw&forecast_days=4')
 .then(r=>r.json()).then(j=>{
   const c=j.current,d=j.daily;
-  let h='<div class="now">'+ic(c.weather_code).replace('<svg','<svg width="76" height="76"')+'<div><span class="t">'+Math.round(c.temperature_2m)+'°</span></div><div>'+(WMO[c.weather_code]||'')+'<br>odczuwalna '+Math.round(c.apparent_temperature)+'°<br>wiatr '+Math.round(c.wind_speed_10m)+' km/h</div></div><div class="d">';
-  for(let i=1;i<4;i++)h+='<div>'+ic(d.weather_code[i])+'<b>'+new Date(d.time[i]).toLocaleDateString('pl-PL',{weekday:'short'})+'</b><br>'+Math.round(d.temperature_2m_max[i])+'° / '+Math.round(d.temperature_2m_min[i])+'°<br>'+d.precipitation_probability_max[i]+'% opadów</div>';
+  let h='<div class="now">'+ic(c.weather_code).replace('<svg','<svg width="72" height="72"')+'<span class="t">'+Math.round(c.temperature_2m)+'°</span><div class="sm">'+(WMO[c.weather_code]||'')+'<br>odczuwalna '+Math.round(c.apparent_temperature)+'°<br>wiatr '+Math.round(c.wind_speed_10m)+' km/h</div></div><div class="d">';
+  for(let i=1;i<4;i++)h+='<div>'+ic(d.weather_code[i])+'<b>'+new Date(d.time[i]).toLocaleDateString('pl-PL',{weekday:'short'})+'</b><br>'+Math.round(d.temperature_2m_max[i])+'° / '+Math.round(d.temperature_2m_min[i])+'°<br><span class="sm">'+d.precipitation_probability_max[i]+'% opadów</span></div>';
   $('wx').innerHTML=h+'</div>';
   const sr=new Date(d.sunrise[0]),ss=new Date(d.sunset[0]),f=Math.min(1,Math.max(0,(now-sr)/(ss-sr)));
   const x=100-90*Math.cos(Math.PI*f),y=90-90*Math.sin(Math.PI*f),len=Math.round((ss-sr)/6e4);
-  $('sun').innerHTML='<svg viewBox="0 0 200 118"><path d="M10 90A90 90 0 0 1 190 90" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="4 5"/><path d="M0 90h200" stroke="currentColor" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="10" fill="#ffc933" stroke="#111" stroke-width="3"/><text x="10" y="112" font-size="14" font-family="inherit" fill="currentColor">↑ '+hm(sr)+'</text><text x="190" y="112" font-size="14" text-anchor="end" font-family="inherit" fill="currentColor">↓ '+hm(ss)+'</text></svg><div class="sm">Dzień trwa '+Math.floor(len/60)+' h '+len%60+' min</div>';
+  $('sun').innerHTML='<svg viewBox="0 0 200 118"><path d="M10 90A90 90 0 0 1 190 90" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 5"/><path d="M0 90h200" stroke="currentColor" stroke-width="2"/><circle cx="'+x+'" cy="'+y+'" r="9" fill="#ffc933" stroke="#111" stroke-width="3"/><text x="10" y="112" font-size="13" font-family="monospace" fill="currentColor">↑ '+hm(sr)+'</text><text x="190" y="112" font-size="13" text-anchor="end" font-family="monospace" fill="currentColor">↓ '+hm(ss)+'</text></svg><div class="sm">Dzień trwa '+Math.floor(len/60)+' h '+len%60+' min</div>';
   const A=[];
   for(let i=0;i<2;i++){const n=i?'Jutro':'Dziś';
     if(d.wind_gusts_10m_max[i]>=70)A.push(n+': silny wiatr, porywy '+Math.round(d.wind_gusts_10m_max[i])+' km/h');
@@ -123,13 +117,12 @@ fetch('https://api.open-meteo.com/v1/forecast?latitude=51.405&longitude=19.703&c
     if(d.temperature_2m_min[i]<=-10)A.push(n+': mróz '+Math.round(d.temperature_2m_min[i])+'°');
     if(d.temperature_2m_max[i]>=30)A.push(n+': upał '+Math.round(d.temperature_2m_max[i])+'°');
     if(d.weather_code[i]>=95)A.push(n+': możliwa burza')}
-  $('al').innerHTML=A.length?A.map(a=>'<div class="al w">'+a+'</div>').join(''):'<div class="al">Brak ostrzeżeń w prognozie na dziś i jutro</div>';
-  $('al').insertAdjacentHTML('beforeend','<div class="sm">Wyliczone z prognozy, nie są to oficjalne ostrzeżenia IMGW.</div>');
+  $('al').innerHTML=(A.length?A.map(a=>'<div class="al w">'+a+'</div>').join(''):'<div class="al">Brak ostrzeżeń w prognozie na dziś i jutro</div>')+'<p class="sm" style="margin-top:6px">Wyliczone z prognozy, nie są to oficjalne ostrzeżenia IMGW.</p>';
 }).catch(()=>$('wx').textContent='Brak danych pogodowych');
 fetch('https://air-quality-api.open-meteo.com/v1/air-quality?latitude=51.405&longitude=19.703&current=european_aqi,pm2_5,pm10&timezone=Europe%2FWarsaw')
 .then(r=>r.json()).then(j=>{const c=j.current,a=c.european_aqi,L=['Bardzo dobra','Dobra','Umiarkowana','Zła','Bardzo zła','Skrajnie zła'];
   const i=a<20?0:a<40?1:a<60?2:a<80?3:a<100?4:5;
-  $('aq').innerHTML='<b>Jakość powietrza: '+L[i]+'</b> ('+Math.round(a)+')<div class="aqi">'+['#1a9e55','#8bc34a','#ffc933','#ff8a30','#e63b2e','#7b1fa2'].map(x=>'<i style="background:'+x+'"></i>').join('')+'<u style="left:calc('+Math.min(100,a/120*100)+'% - 3px)"></u></div><div class="sm">PM2.5: '+Math.round(c.pm2_5)+' · PM10: '+Math.round(c.pm10)+' µg/m³</div>';
+  $('aq').innerHTML='<h3>Powietrze: '+L[i]+' ('+Math.round(a)+')</h3><div class="aqi">'+['#1a9e55','#8bc34a','#ffc933','#ff8a30','#e63b2e','#7b1fa2'].map(x=>'<i style="background:'+x+'"></i>').join('')+'<u style="left:calc('+Math.min(100,a/120*100)+'% - 2px)"></u></div><div class="sm">PM2.5: '+Math.round(c.pm2_5)+' · PM10: '+Math.round(c.pm10)+' µg/m³</div>';
 }).catch(()=>$('aq').textContent='Brak danych o powietrzu');
 fetch('/api/calendar').then(r=>r.json()).then(j=>{
   const b=$('cal');b.textContent='';
@@ -143,44 +136,61 @@ fetch('/api/calendar').then(r=>r.json()).then(j=>{
 }).catch(()=>$('cal').textContent='Kalendarz niedostępny');
 const pc=v=>'<span class="'+(v>=0?'up':'dn')+'">'+(v>=0?'▲ +':'▼ ')+v.toFixed(2).replace('.',',')+'%</span>';
 fetch('/api/market').then(r=>r.json()).then(j=>{
-  let h='<h3>Kursy NBP (PLN)</h3><table>'+j.fx.map(x=>'<tr><td><b>'+x.c+'</b></td><td>'+x.v.toFixed(4).replace('.',',')+'</td><td>'+pc(x.ch)+'</td></tr>').join('')+'</table>';
-  if(j.st.length)h+='<h3>Akcje i ETF (ostatnie zamknięcie)</h3><table>'+j.st.map(x=>'<tr><td><b>'+x.k+'</b></td><td>'+x.p.toFixed(2).replace('.',',')+'</td><td>'+pc(x.ch)+'</td></tr>').join('')+'</table>';
+  let h='<h3 style="margin-top:0">Kursy NBP (PLN)</h3><table>'+j.fx.map(x=>'<tr><td><b>'+x.c+'</b></td><td>'+x.v.toFixed(4).replace('.',',')+'</td><td>'+pc(x.ch)+'</td></tr>').join('')+'</table>';
+  if(j.st.length){h+='<h3>Akcje i ETF</h3><table>'+j.st.map(x=>'<tr><td><b>'+x.k+'</b></td><td>'+x.p.toFixed(2).replace('.',',')+(x.cur&&x.cur!='PLN'?' '+x.cur:'')+'</td><td>'+pc(x.ch)+'</td></tr>').join('')+'</table>';
+    const t=Math.max(...j.st.map(x=>x.t));if(t)$('mt').textContent='stan '+new Date(t).toLocaleString('pl-PL',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})}
+  h+='<p class="sm" style="margin-top:8px">Notowania opóźnione, zmiana względem poprzedniej sesji.</p>';
   if(j.failed.length)h+='<p class="err">Bez danych: '+j.failed.join(', ')+'</p>';
   $('mk').innerHTML=h;
 }).catch(()=>$('mk').textContent='Brak danych rynkowych');
-let items=[],cat='all',txt='',seen=0;
-try{seen=+localStorage.getItem('seen')||0}catch(e){}
+const MN=['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
+fetch('https://pl.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&exsectionformat=wiki&titles='+now.getDate()+'_'+MN[now.getMonth()]+'&format=json&formatversion=2&origin=*')
+.then(r=>r.json()).then(j=>{
+  const t=j.query.pages[0].extract||'',out=[];
+  [['Wydarzenia w Polsce',3],['Wydarzenia na świecie',4]].forEach(([n,k])=>{
+    const m=t.match(new RegExp('==\\s*'+n+'\\s*==([\\s\\S]*?)(?=\\n==\\s*[^=]|$)'));if(!m)return;
+    const L=m[1].split('\n').map(l=>l.match(/^(\d{3,4})\s*[–—-]\s*(.+)$/)).filter(Boolean);
+    for(let i=0;i<Math.min(k,L.length);i++){const x=L[Math.floor(i*L.length/k)];out.push([x[1],x[2].slice(0,170)])}});
+  const b=$('hs');b.textContent='';
+  if(!out.length){b.textContent='Brak danych.';return}
+  out.forEach(([y,x])=>{const d=el('div');d.append(el('b','',y),x);b.append(d)});
+}).catch(()=>$('hs').textContent='Brak danych.');
+const CC={pilka:'#2ecc71',kraj:'#4d7cff',kultura:'#ffc933',okazje:'#ff5a4d'};
+let items=[],seen=0,off=new Set(),failed=[];
+try{seen=+localStorage.getItem('seen')||0;off=new Set(JSON.parse(localStorage.getItem('off')||'[]'))}catch(e){}
+const saveOff=()=>{try{localStorage.setItem('off',JSON.stringify([...off]))}catch(e){}};
 function rn(){
-  const l=items.filter(i=>(cat=='all'||i.c==cat)&&(!txt||(i.t+i.s).toLowerCase().includes(txt))).slice(0,60);
-  const b=$('nw');b.textContent='';
+  const l=items.filter(i=>!off.has(i.s)).slice(0,60),b=$('nw');b.textContent='';
+  $('nc').textContent=l.length+' wpisów';
   l.forEach((i,k)=>{const a=el('a',k==0&&i.i?'big':'');a.href=i.l;a.target='_blank';a.rel='noopener';
     if(i.i){const m=el('img');m.src=i.i;m.loading='lazy';m.alt='';m.onerror=()=>m.remove();a.append(m)}
     const w=el('div'),t=el('b','',i.t);if(i.d>seen)t.className='n';
     w.append(t,el('small','',i.s+(i.d?' · '+new Date(i.d).toLocaleString('pl-PL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'')));a.append(w);b.append(a)});
-  if(!l.length)b.textContent='Brak wiadomości.';
+  if(!l.length)b.textContent='Brak wiadomości. Włącz jakieś źródło powyżej.';
 }
-[['all','Wszystko'],['pilka','Piłka'],['kraj','Kraj'],['kultura','Kultura i tech'],['okazje','Okazje']].forEach(([k,n])=>{const b=el('button','',n);if(k=='all')b.className='on';
-  b.onclick=()=>{cat=k;[...$('ch').children].forEach(x=>x.className='');b.className='on';rn()};$('ch').append(b)});
-fetch('/api/rss').then(r=>r.json()).then(j=>{items=j.items;rn();
-  if(j.failed.length)$('nw').append(el('p','err','Nie pobrano: '+j.failed.join(', ')));
+function tiles(){
+  const T=$('tl');T.textContent='';
+  const src=[...new Map(items.map(i=>[i.s,i.c])).entries()].sort((a,b)=>a[1].localeCompare(b[1])||a[0].localeCompare(b[0]));
+  const all=el('button','ac','wszystkie');all.onclick=()=>{off.clear();saveOff();tiles();rn()};
+  const none=el('button','ac','żadne');none.onclick=()=>{src.forEach(([s])=>off.add(s));saveOff();tiles();rn()};
+  T.append(all,none);
+  src.forEach(([s,c])=>{const b=el('button',off.has(s)?'':'on',s);b.style.setProperty('--tc',CC[c]);b.onclick=()=>{off.has(s)?off.delete(s):off.add(s);saveOff();tiles();rn()};T.append(b)});
+  failed.forEach(s=>{const b=el('button','x',s);b.style.setProperty('--tc','#555');b.title='Nie udało się pobrać';T.append(b)});
+}
+fetch('/api/rss').then(r=>r.json()).then(j=>{items=j.items;failed=j.failed;tiles();rn();
   try{localStorage.setItem('seen',Date.now())}catch(e){}
 }).catch(()=>$('nw').textContent='Nie udało się pobrać wiadomości.');
-let mode='g';
-document.querySelectorAll('.srch button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('.srch button').forEach(x=>x.className='');b.className='on';if(mode=='n'){txt=$('q').value.toLowerCase();rn()}});
-$('q').oninput=()=>{if(mode=='n'){txt=$('q').value.toLowerCase().trim();rn()}};
-$('q').onkeydown=e=>{if(e.key!='Enter')return;const v=encodeURIComponent($('q').value.trim());if(!v||mode=='n')return;
-  location.href=(mode=='g'?'https://www.google.com/search?q=':'https://www.perplexity.ai/search?q=')+v};
 const L=[
-['Piotrków',[['Miasto','https://www.piotrkow.pl/'],['ePiotrków','https://epiotrkow.pl/'],['Muzeum','https://muzeumpiotrkow.pl/']]],
 ['Radio i media',[['Polskie Radio 24','https://polskieradio24.pl/'],['Zero.pl','https://zero.pl/'],['PAP','https://www.pap.pl/'],['Onet','https://wiadomosci.onet.pl/']]],
+['Piotrków',[['Miasto','https://www.piotrkow.pl/'],['ePiotrków','https://epiotrkow.pl/'],['Muzeum','https://muzeumpiotrkow.pl/']]],
 ['Piłka',[['90minut','http://www.90minut.pl/'],['Łódzki futbol','https://lodzkifutbol.pl/'],['Okręgówka','https://okregowka.pl/'],['ŁKS kalendarz','https://lkslodz.pl/sekcje/kalendarz-wielosekcyjny/']]],
 ['Piłka ręczna',[['Piotrcovia','http://www.piotrcovia.pl/#!'],['Piotrkowianin','https://www.piotrkowianin.pl/']]],
 ['Pieniądze i zakupy',[['Vinted','https://www.vinted.pl/'],['Pepper','https://www.pepper.pl/'],['Finax','https://www.finax.eu/pl'],['Subiektywnie','https://subiektywnieofinansach.pl/']]],
 ['Narzędzia AI',[['Perplexity','https://www.perplexity.ai/'],['NotebookLM','https://notebooklm.google.com/'],['duck.ai','https://duck.ai/'],['arena.ai','https://arena.ai/video']]],
-['Inne',[['JustWatch','https://www.justwatch.com/pl/nowe'],['Zero.pl','https://zero.pl/'],['Flight over Earth','https://flightoverearth.com/'],['World Monitor','https://www.worldmonitor.app/']]]];
-const EV=['https://www.club-bogart.com/index.php/ct-menu-item-5','https://www.orzel.lodz.pl/','https://atlasarena.pl/aktualnosci/','https://wytwornia.pl/repertuar/','https://www.operalodz.com/Kalendarz,234','https://nowy.pl/repertuar/','https://teatr-muzyczny.lodz.pl/repertuar/','https://teatrjaracza.pl/repertuar','https://www.spodekkatowice.pl/pl/wydarzenia/61/','https://torwar.cos.pl/151/cos-torwar-kalendarz-wydarzen','https://www.livenation.pl/event/allevents','https://progresja.com/wydarzenia/','https://www.filharmonia.lodz.pl/repertuar-filharmonii-lodzkiej?month=1','https://ppw-ewenement.pl/pages/eventy','https://ergoarena.pl/kalendarz-wydarzen/'];
+['Inne',[['JustWatch','https://www.justwatch.com/pl/nowe'],['Flight over Earth','https://flightoverearth.com/'],['World Monitor','https://www.worldmonitor.app/']]]];
+const EV=['https://www.club-bogart.com/','https://www.orzel.lodz.pl/','https://atlasarena.pl/aktualnosci/','https://wytwornia.pl/repertuar/','https://www.operalodz.com/Kalendarz,234','https://nowy.pl/repertuar/','https://teatr-muzyczny.lodz.pl/repertuar/','https://teatrjaracza.pl/repertuar','https://www.spodekkatowice.pl/pl/wydarzenia/61/','https://torwar.cos.pl/151/cos-torwar-kalendarz-wydarzen','https://www.livenation.pl/event/allevents','https://progresja.com/wydarzenia/','https://www.filharmonia.lodz.pl/repertuar-filharmonii-lodzkiej?month=1','https://ppw-ewenement.pl/pages/eventy','https://ergoarena.pl/kalendarz-wydarzen/'];
 L.forEach(([n,a])=>{const d=el('div','g');a.forEach(([t,u])=>{const x=el('a','',t);x.href=u;x.target='_blank';x.rel='noopener';d.append(x)});$('lk').append(el('h3','',n),d)});
-const bt=el('button','all','Otwórz wszystkie repertuary ('+EV.length+')');bt.onclick=()=>EV.forEach(u=>window.open(u,'_blank','noopener'));$('lk').append(bt);
+const bt=el('button','all','Otwórz wszystkie repertuary ('+EV.length+')');bt.className='all';bt.onclick=()=>EV.forEach(u=>window.open(u,'_blank','noopener'));$('lk').append(bt);
 </script>
 </body>
 </html>

@@ -20,6 +20,8 @@ const FEEDS = [
   ['LowcyChin','https://www.lowcychin.pl/feed/','okazje'],
   ['Kanał Wyjazdowy','https://kanalwyjazdowy.pl/feed/','okazje'],
 ];
+const FIX = new Set(['wnp.pl']);
+const off = t => new Date(new Date(t).toLocaleString('en-US', { timeZone: 'Europe/Warsaw' })) - new Date(new Date(t).toLocaleString('en-US', { timeZone: 'UTC' }));
 const clean = s => (s || '')
   .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
   .replace(/<[^>]+>/g, '')
@@ -45,7 +47,8 @@ async function load([n, u, c]) {
   }
   const blocks = x.match(/<(item|entry)[\s>][\s\S]*?<\/\1>/gi) || [];
   return blocks.slice(0, 15).map(b => {
-    const d = Date.parse(tag(b, 'pubDate') || tag(b, 'published') || tag(b, 'updated') || tag(b, 'dc:date')) || 0;
+    let d = Date.parse(tag(b, 'pubDate') || tag(b, 'published') || tag(b, 'updated') || tag(b, 'dc:date')) || 0;
+    if (d && (FIX.has(n) || d > Date.now() + 3e5)) d -= off(d);
     return { s: n, c, t: tag(b, 'title'), l: link(b), d, i: img(b) };
   }).filter(i => i.t && i.l);
 }

@@ -3,6 +3,9 @@ const FEEDS = [
   ['wnp.pl','http://www.wnp.pl/rss/serwis_rss.xml','kraj'],
   ['Polityka','http://www.polityka.pl/rss/articles.xml?list=72','kraj'],
   ['Wirtualnemedia','http://wirtualnemedia.pl/rss/wirtualnemedia_rss.xml','kraj'],
+  ['Zero.pl','https://zero.pl/','kraj'],
+  ['PAP','https://www.pap.pl/','kraj'],
+  ['Onet','https://wiadomosci.onet.pl/.feed','kraj'],
   ['Legionisci','http://legionisci.com/rss/newsy.xml','pilka'],
   ['Legia.Net','https://legia.net/rss','pilka'],
   ['Legia TV','https://www.youtube.com/feeds/videos.xml?channel_id=UC1uq_GHtFPL6MrJZBU4LnsQ','pilka'],
@@ -32,9 +35,14 @@ const link = b => {
 };
 const img = b => { const m = b.match(/<media:(?:thumbnail|content)[^>]*url="([^"]+)"/i) || b.match(/<enclosure[^>]*url="([^"]+\.(?:jpe?g|png|webp)[^"]*)"/i) || b.match(/<img[^>]*src=["']([^"']+)["']/i) || b.match(/&lt;img[^&]*src=["']([^"']+)["']/i); return m ? m[1].replace(/&amp;/g, '&') : ''; };
 async function load([n, u, c]) {
-  const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 PulpitBot' }, signal: AbortSignal.timeout(8000) });
-  if (!r.ok) throw new Error(n);
-  const x = await r.text();
+  const get = async url => { const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 PulpitBot' }, signal: AbortSignal.timeout(8000) }); if (!r.ok) throw new Error(n); return r.text(); };
+  let x = await get(u);
+  if (!/<(item|entry)[\s>]/i.test(x)) {
+    const t = x.match(/<link[^>]+type=["']application\/(?:rss|atom)\+xml["'][^>]*>/i);
+    const h = t && t[0].match(/href=["']([^"']+)["']/);
+    if (!h) throw new Error(n);
+    x = await get(new URL(h[1], u).href);
+  }
   const blocks = x.match(/<(item|entry)[\s>][\s\S]*?<\/\1>/gi) || [];
   return blocks.slice(0, 15).map(b => {
     const d = Date.parse(tag(b, 'pubDate') || tag(b, 'published') || tag(b, 'updated') || tag(b, 'dc:date')) || 0;

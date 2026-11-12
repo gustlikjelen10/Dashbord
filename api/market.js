@@ -1,10 +1,11 @@
-const ST = [['PKN','Orlen','pkn'],['PKO','PKO BP','pko'],['PZU','PZU','pzu'],['DIAG','Diagnostyka','dia'],['DINO','Dino','dnp'],['DOMDEV','Develia','dom'],['ERSTE','Erste','ebs'],['ETFBTBSP','ETF BTBSP','etfbtbsp'],['IUSA','iShares S&P500','iusa.de'],['VUSA','Vanguard S&P500','vusa.de']];
-const get = async u => { const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(8000) }); if (!r.ok) throw new Error(u); return r; };
-async function stock([k, n, s]) {
-  const rows = (await (await get('https://stooq.pl/q/d/l/?s=' + s + '&i=d')).text()).trim().split('\n').slice(-2).map(l => l.split(','));
-  const c = +rows[1][4], p = +rows[0][4];
-  if (!c || !p) throw new Error(k);
-  return { k, n, p: c, ch: (c / p - 1) * 100, d: rows[1][0] };
+const ST = [['PKN','Orlen','PKN.WA'],['PKO','PKO BP','PKO.WA'],['PZU','PZU','PZU.WA'],['DIAG','Diagnostyka','DIA.WA'],['DINO','Dino','DNP.WA'],['DOMDEV','Develia','DOM.WA'],['ERSTE','Erste','EBS.WA'],['ETFBTBSP','ETF BTBSP','ETFBTBSP.WA'],['IUSA','iShares S&P500','IUSA.DE'],['VUSA','Vanguard S&P500','VUSA.DE']];
+const get = async u => { const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36' }, signal: AbortSignal.timeout(8000) }); if (!r.ok) throw new Error(u); return r; };
+async function stock([k, n, y]) {
+  const j = await (await get('https://query1.finance.yahoo.com/v8/finance/chart/' + y + '?range=5d&interval=1d')).json();
+  const r = j.chart.result[0], cl = r.indicators.quote[0].close.filter(v => v != null), p = r.meta.regularMarketPrice;
+  const prev = Math.abs(cl[cl.length - 1] - p) < 1e-9 ? cl[cl.length - 2] : cl[cl.length - 1];
+  if (!p || !prev) throw new Error(k);
+  return { k, n, p, ch: (p / prev - 1) * 100, cur: r.meta.currency };
 }
 module.exports = async (req, res) => {
   const out = { fx: [], st: [], failed: [] };

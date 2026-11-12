@@ -20,6 +20,7 @@ h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12
 .head span{font-size:18px;position:relative}
 .head svg{position:absolute;right:0;top:0;height:100%;width:60%}
 .srch{display:flex;flex-wrap:wrap;gap:6px}
+.btn{font-weight:700;border:3px solid var(--red);background:var(--red);color:#fff;padding:6px 12px;text-decoration:none;display:flex;align-items:center}
 .srch input{flex:1 1 200px}
 input{font:inherit;min-width:0;padding:10px;border:3px solid var(--ink);background:transparent;color:inherit;border-radius:0;font-size:17px}
 button{font:inherit;font-weight:700;border:3px solid var(--ink);background:transparent;color:var(--ink);padding:6px 12px;cursor:pointer;border-radius:0}
@@ -72,15 +73,15 @@ button.on{background:var(--ink);color:var(--paper)}
 <main>
 <section class="head wide">
 <svg viewBox="0 0 300 150" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><circle cx="230" cy="60" r="52" fill="#e63b2e"/><rect x="120" y="70" width="90" height="90" fill="#1f4fd8"/><polygon points="250,150 300,40 300,150" fill="#111"/><rect x="170" y="10" width="14" height="60" fill="#111"/></svg>
-<b id="dz"></b><span id="dm"></span></section>
-<section class="wide"><div class="srch"><input id="q" placeholder="Szukaj…" autocomplete="off"><button class="on" data-m="g">Google</button><button data-m="p">Perplexity</button><button data-m="n">Wiadomości</button></div></section>
+<b id="dz"></b><span id="dm"></span><span id="im"></span></section>
+<section class="wide"><div class="srch"><input id="q" placeholder="Szukaj…" autocomplete="off"><button class="on" data-m="g">Google</button><button data-m="p">Perplexity</button><button data-m="n">Wiadomości</button><a class="btn" href="https://polskieradio24.pl/" target="_blank" rel="noopener">▶ Polskie Radio 24</a></div></section>
 <div>
 <section class="wx"><h2>Pogoda · Piotrków Tryb.</h2><div id="wx">Ładuję…</div></section>
 <section><h2>Bieg dnia</h2><div class="strip"><div class="sun" id="sun"></div><div id="aq"></div><div id="al"></div></div></section>
 <section class="cal"><h2>Kalendarz</h2><div id="cal">Ładuję…</div></section>
 <section class="bus"><h2>Autobusy</h2>
 <svg viewBox="0 0 240 70" aria-hidden="true"><rect x="10" y="8" width="200" height="44" fill="#fff"/><rect x="20" y="16" width="30" height="18" fill="#1f4fd8"/><rect x="58" y="16" width="30" height="18" fill="#1f4fd8"/><rect x="96" y="16" width="30" height="18" fill="#1f4fd8"/><rect x="134" y="16" width="30" height="18" fill="#1f4fd8"/><rect x="172" y="12" width="30" height="40" fill="#ffc933"/><circle cx="52" cy="54" r="10" fill="#111"/><circle cx="168" cy="54" r="10" fill="#111"/><rect x="10" y="40" width="160" height="4" fill="#e63b2e"/></svg>
-<a href="https://piotrkow.kiedyprzyjedzie.pl/#/" target="_blank" rel="noopener">Kiedy przyjedzie · na żywo →</a>
+<a href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">Kostromska – Belzacka · odjazdy na żywo →</a>
 <a href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład jazdy MZK →</a></section>
 <section class="mk"><h2>Waluty i akcje</h2><div id="mk">Ładuję…</div></section>
 </div>
@@ -90,6 +91,7 @@ button.on{background:var(--ink);color:var(--paper)}
 <script>
 const $=id=>document.getElementById(id),now=new Date();
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+fetch('https://nameday.abalin.net/api/V1/today?country=pl&timezone=Europe/Warsaw').then(r=>r.json()).then(j=>{const d=j.data||j,n=d.name_pl||(d.namedays&&d.namedays.pl)||d.name;if(n)$('im').textContent='Imieniny: '+n}).catch(()=>{});
 const hm=d=>new Date(d).toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'});
 $('dz').textContent=now.toLocaleDateString('pl-PL',{day:'numeric',month:'long'});
 $('dm').textContent=now.toLocaleDateString('pl-PL',{weekday:'long',year:'numeric'});
@@ -170,6 +172,7 @@ $('q').onkeydown=e=>{if(e.key!='Enter')return;const v=encodeURIComponent($('q').
   location.href=(mode=='g'?'https://www.google.com/search?q=':'https://www.perplexity.ai/search?q=')+v};
 const L=[
 ['Piotrków',[['Miasto','https://www.piotrkow.pl/'],['ePiotrków','https://epiotrkow.pl/'],['Muzeum','https://muzeumpiotrkow.pl/']]],
+['Radio i media',[['Polskie Radio 24','https://polskieradio24.pl/'],['Zero.pl','https://zero.pl/'],['PAP','https://www.pap.pl/'],['Onet','https://wiadomosci.onet.pl/']]],
 ['Piłka',[['90minut','http://www.90minut.pl/'],['Łódzki futbol','https://lodzkifutbol.pl/'],['Okręgówka','https://okregowka.pl/'],['ŁKS kalendarz','https://lkslodz.pl/sekcje/kalendarz-wielosekcyjny/']]],
 ['Piłka ręczna',[['Piotrcovia','http://www.piotrcovia.pl/#!'],['Piotrkowianin','https://www.piotrkowianin.pl/']]],
 ['Pieniądze i zakupy',[['Vinted','https://www.vinted.pl/'],['Pepper','https://www.pepper.pl/'],['Finax','https://www.finax.eu/pl'],['Subiektywnie','https://subiektywnieofinansach.pl/']]],

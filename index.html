@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a0d10">
 <title>Pulpit</title>
-<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:dark;--font:'Comic Neue','Comic Sans MS',cursive,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;--bg:#0a0d10;--pn:#10151a;--bd:#222b35;--tx:#e8eaed;--mu:#8b95a1;--g:#2ecc71;--y:#ffc933;--r:#ff5a4d;--b:#4d7cff}
+:root{color-scheme:dark;--font:'Comic Relief','Comic Sans MS',cursive,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;--bg:#0a0d10;--pn:#10151a;--bd:#222b35;--tx:#e8eaed;--mu:#8b95a1;--g:#2ecc71;--y:#ffc933;--r:#ff5a4d;--b:#4d7cff}
 *{box-sizing:border-box;margin:0}
 body{font-family:var(--font);background:var(--bg);color:var(--tx);line-height:1.35;padding-bottom:env(safe-area-inset-bottom)}
 .top{position:sticky;top:0;z-index:5;background:rgba(10,13,16,.95);border-bottom:1px solid var(--bd);display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:calc(8px + env(safe-area-inset-top)) 12px 8px}
@@ -53,6 +53,8 @@ td:nth-child(n+2){text-align:right;font-family:var(--mono);font-size:13px}td:las
 .hs div{padding:6px 0;border-bottom:1px solid var(--bd);font-size:14px}.hs b{font:700 12px var(--mono);color:var(--y);margin-right:6px}
 .mt .tm{font:700 11px var(--mono);letter-spacing:.1em;color:var(--g);margin:10px 0 2px;text-transform:uppercase}.mt .tm:first-child{margin-top:0}.mt .r{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:14px}.mt .r b{font:700 12px var(--mono);color:var(--y);min-width:74px}.mt .r.lv b{color:var(--r)}
 .yt{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;max-height:60vh;overflow:auto}.yt a{color:inherit;text-decoration:none;font-size:14px;font-weight:700}.yt a:hover{color:var(--y)}.yt img{width:100%;aspect-ratio:16/9;object-fit:cover;border:1px solid var(--bd);display:block;margin-bottom:4px}.yt small{display:block;color:var(--mu);font:11px var(--mono);font-weight:400}
+.sc{max-height:200px;overflow:auto}.sc.t{max-height:260px}.cdg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.cdg div{border:1px solid var(--bd);padding:8px}.cdg b{display:block;font:700 28px var(--mono);color:var(--y);line-height:1.1}.cdg span{font-size:13px;color:var(--mu)}
+.ap .big{font:700 44px var(--mono);color:var(--y);line-height:1}.ap td:first-child{width:auto}
 .lk{grid-column:1/-1}.lk .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
 .lk a{border:1px solid var(--bd);padding:8px;color:var(--tx);text-decoration:none;font-weight:700;border-radius:2px}.lk a:hover{border-color:var(--y);color:var(--y)}
 .lk .all{width:100%;margin-top:12px;padding:12px;font:700 13px var(--mono);background:var(--r);border:0;color:#fff;cursor:pointer;border-radius:2px}
@@ -64,21 +66,27 @@ td:nth-child(n+2){text-align:right;font-family:var(--mono);font-size:13px}td:las
 <div class="col">
 <section class="p"><header><h2>Maksyma dnia</h2></header><div class="b mx" id="mx"></div></section>
 <section class="p"><header><h2>Pogoda · Piotrków</h2></header><div class="b" id="wx">Ładuję…</div></section>
+<section class="p"><header><h2>Radar opadów</h2><em class="pill">WINDY</em></header><div class="b" style="padding:0"><iframe title="Radar Windy" loading="lazy" style="width:100%;height:340px;border:0;display:block" src="https://embed.windy.com/embed2.html?lat=51.405&lon=19.703&detailLat=51.405&detailLon=19.703&zoom=7&level=surface&overlay=radar&product=radar&menu=&message=&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"></iframe></div></section>
 <section class="p"><header><h2>Bieg dnia</h2></header><div class="b"><div class="sun" id="sun"></div><div id="aq"></div><div id="al"></div></div></section>
 <section class="p bus"><header><h2>Autobusy</h2><em class="pill">KOSTROMSKA – BELZACKA</em></header><div class="b lnk">
 <svg viewBox="0 0 240 70" aria-hidden="true"><rect x="10" y="8" width="200" height="44" fill="#e8eaed"/><rect x="20" y="16" width="30" height="18" fill="#4d7cff"/><rect x="58" y="16" width="30" height="18" fill="#4d7cff"/><rect x="96" y="16" width="30" height="18" fill="#4d7cff"/><rect x="134" y="16" width="30" height="18" fill="#4d7cff"/><rect x="172" y="12" width="30" height="40" fill="#ffc933"/><circle cx="52" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><circle cx="168" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><rect x="10" y="40" width="160" height="4" fill="#ff5a4d"/></svg>
 <a href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">Odjazdy na żywo →</a>
 <a href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład jazdy MZK →</a></div></section>
-<section class="p"><header><h2>Kamera · Rynek</h2><em class="pill">TOYA</em></header><div class="b lnk"><video id="cam" muted autoplay playsinline controls style="width:100%;display:none"></video><a href="https://go.toya.net.pl/25-kamery" target="_blank" rel="noopener">TOYA · kamery miejskie →</a><a href="https://www.windy.com/webcams/1621006350" target="_blank" rel="noopener">Rynek Trybunalski (Windy) →</a></div></section>
+<section class="p"><header><h2>PKP · Piotrków Tryb.</h2><em class="pill">WG ROZKŁADU</em></header><div class="b" id="pk">Ładuję…</div></section>
+<section class="p"><header><h2>Kamera · Rynek</h2><em class="pill" id="cm">TOYA</em></header><div class="b lnk"><video id="cam" muted autoplay playsinline controls style="width:100%;display:none"></video><a href="https://go.toya.net.pl/25-kamery" target="_blank" rel="noopener">TOYA · kamery miejskie →</a><a href="https://www.windy.com/webcams/1621006350" target="_blank" rel="noopener">Rynek Trybunalski (Windy) →</a></div></section>
 </div>
 <div class="col">
 <section class="p"><header><h2>Wiadomości</h2><em class="pill" id="nc"></em></header><div class="b"><div class="tiles" id="tl"></div><div class="nl" id="nw">Ładuję…</div></div></section>
 <section class="p"><header><h2>YouTube · nowości z subskrypcji</h2></header><div class="b"><div class="yt" id="yt">Ładuję…</div></div></section>
 </div>
 <div class="col">
-<section class="p mt"><header><h2>Mecze</h2></header><div class="b" id="mt2">Ładuję…</div></section>
+<section class="p mt"><header><h2>Mecze</h2></header><div class="b" id="mt2">Ładuję…</div><div class="b" style="padding-top:0"><div class="tm">Dziś na świecie</div><div class="sc" id="td2">Ładuję…</div></div></section>
+<section class="p"><header><h2>Odliczanie</h2></header><div class="b"><div class="cdg" id="cd"></div></div></section>
+<section class="p"><header><h2>Tabela · I liga</h2></header><div class="b"><div class="sc t" id="tb">Ładuję…</div></div></section>
 <section class="p"><header><h2>Kalendarz</h2></header><div class="b" id="cal">Ładuję…</div></section>
 <section class="p"><header><h2>Waluty i akcje</h2><em class="pill" id="mt"></em></header><div class="b" id="mk">Ładuję…</div></section>
+<section class="p ap"><header><h2>Siłownia</h2><a class="pill" style="text-decoration:none" href="https://silownia-v1.vercel.app" target="_blank" rel="noopener">OTWÓRZ →</a></header><div class="b" id="gy">Ładuję…</div></section>
+<section class="p ap"><header><h2>Piwko · ranking</h2><a class="pill" style="text-decoration:none" href="https://piwko-eight.vercel.app" target="_blank" rel="noopener">OTWÓRZ →</a></header><div class="b" id="bw">Ładuję…</div></section>
 <section class="p"><header><h2>Dziś w historii</h2></header><div class="b hs" id="hs">Ładuję…</div></section>
 </div>
 <section class="p lk"><header><h2>Szybkie linki</h2></header><div class="b" id="lk"></div></section>
@@ -160,17 +168,52 @@ fetch('https://pl.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext
   out.forEach(([y,x])=>{const d=el('div');d.append(el('b','',y),x);b.append(d)});
 }).catch(()=>$('hs').textContent='Brak danych.');
 
-const CAM_URL='';
+const CAM_URL='https://cdn-13-go.toya.net.pl/kamery/piot_rynektrybunalski.m3u8?p=63616d005f5e0ff.ecaabc96309574868e5600637374.756e617574686f72697a6564&pl=web';
 if(CAM_URL){const v=$('cam');v.style.display='block';
-  if(/\.m3u8/.test(CAM_URL)){const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js';s.onload=()=>{if(Hls.isSupported()){const x=new Hls();x.loadSource(CAM_URL);x.attachMedia(v)}else v.src=CAM_URL};document.head.append(s)}else v.src=CAM_URL}
+  if(/\.m3u8/.test(CAM_URL)){const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js';s.onload=()=>{if(Hls.isSupported()){const x=new Hls();x.on(Hls.Events.ERROR,(e,d)=>{if(d.fatal){v.style.display='none';$('cm').textContent='BRAK DOSTĘPU'}});x.loadSource(CAM_URL);x.attachMedia(v)}else v.src=CAM_URL};document.head.append(s)}else v.src=CAM_URL}
+const C={Poland:'Polska',Germany:'Niemcy',France:'Francja',Italy:'Włochy',Spain:'Hiszpania',England:'Anglia',Croatia:'Chorwacja',Czechia:'Czechy','Czech Republic':'Czechy',Slovakia:'Słowacja',Norway:'Norwegia',Sweden:'Szwecja',Denmark:'Dania',Finland:'Finlandia',Netherlands:'Holandia',Belgium:'Belgia',Portugal:'Portugalia',Switzerland:'Szwajcaria',Ukraine:'Ukraina',Lithuania:'Litwa',Latvia:'Łotwa',Hungary:'Węgry',Romania:'Rumunia',Bulgaria:'Bułgaria',Greece:'Grecja',Turkey:'Turcja',Scotland:'Szkocja',Wales:'Walia',Ireland:'Irlandia',Iceland:'Islandia',Moldova:'Mołdawia',Kazakhstan:'Kazachstan',Brazil:'Brazylia',Mexico:'Meksyk',Japan:'Japonia','South Korea':'Korea Płd.','Saudi Arabia':'Arabia Saudyjska',Qatar:'Katar',Kuwait:'Kuwejt',Syria:'Syria','United Arab Emirates':'ZEA',Kyrgyzstan:'Kirgistan','Chinese Taipei':'Tajwan',Singapore:'Singapur',Paraguay:'Paragwaj',Slovenia:'Słowenia','Bosnia and Herzegovina':'Bośnia i Hercegowina','North Macedonia':'Macedonia Płn.',Georgia:'Gruzja',Azerbaijan:'Azerbejdżan',Israel:'Izrael',Egypt:'Egipt',Morocco:'Maroko',Colombia:'Kolumbia',Uruguay:'Urugwaj',Venezuela:'Wenezuela',Canada:'Kanada',Iraq:'Irak',Jordan:'Jordania',Bahrain:'Bahrajn','New Zealand':'Nowa Zelandia',China:'Chiny',India:'Indie',Thailand:'Tajlandia',Vietnam:'Wietnam',Indonesia:'Indonezja',Uzbekistan:'Uzbekistan',Luxembourg:'Luksemburg',Cyprus:'Cypr',Kosovo:'Kosowo',Montenegro:'Czarnogóra',Belarus:'Białoruś',Russia:'Rosja','Faroe Islands':'Wyspy Owcze'};
+const pl=s=>s.replace(/^(.*?)((?: U\d\d| W)?)$/,(m,a,b)=>(C[a]||a)+b);
 const mr=m=>{const live=['1H','HT','2H','ET','P','LIVE'].includes(m.s),fin=['FT','AET','PEN'].includes(m.s);
-  const r=el('div','r'+(live?' lv':''));r.append(el('b','',live?'NA ŻYWO':fin?'koniec':new Date(m.d).toLocaleString('pl-PL',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})),el('span','',m.h+' '+(m.gh!=null?m.gh+':'+m.ga:'–')+' '+m.a));return r};
+  const r=el('div','r'+(live?' lv':''));r.append(el('b','',live?'NA ŻYWO':fin?'koniec':new Date(m.d).toLocaleString('pl-PL',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})),el('span','',pl(m.h)+' '+(m.gh!=null?m.gh+':'+m.ga:'–')+' '+pl(m.a)));return r};
+let LKS=[];
+function cd(){const b=$('cd');b.textContent='';const n=new Date(),y=n.getFullYear();
+  const T=[['do Wigilii',new Date(y,11,24)],['do końca roku',new Date(y,11,31,23,59,59)]];
+  LKS.forEach(m=>T.push(['ŁKS – '+pl(m.h.match(/lks|łks/i)?m.a:m.h),new Date(m.d)]));
+  T.forEach(([l,t])=>{if(t<n&&!l.startsWith('ŁKS'))t=new Date(t.getFullYear()+1,t.getMonth(),t.getDate(),t.getHours(),t.getMinutes());
+    const d=Math.ceil((t-n)/864e5);if(d<0)return;const x=el('div');x.append(el('b','',d===0?'dziś':String(d)),el('span','',(d===0?'':d===1?'dzień ':'dni ')+l));b.append(x)})}
+cd();
 fetch('/api/matches').then(r=>r.json()).then(j=>{const b=$('mt2');b.textContent='';
-  if(j.off){b.innerHTML='<p class="sm">Dodaj klucz APIFOOTBALL_KEY w Vercelu (api-football.com, plan darmowy).</p>';return}
-  j.teams.forEach(t=>{b.append(el('div','tm',t.n));if(!t.m.length)b.append(el('p','sm','Brak zaplanowanych meczów.'));t.m.forEach(m=>b.append(mr(m)))});
-  b.append(el('div','tm','Dziś na świecie'));if(!j.today.length)b.append(el('p','sm','Brak meczów z wybranych lig.'));j.today.forEach(m=>b.append(mr(m)));
+  if(j.off){b.innerHTML='<p class="sm">Dodaj klucz APIFOOTBALL_KEY w Vercelu (api-football.com, plan darmowy).</p>';$('tb').textContent='';return}
+  j.teams.forEach(t=>{b.append(el('div','tm',t.n));if(!t.m.length)b.append(el('p','sm','Brak zaplanowanych meczów.'));t.m.slice(0,3).forEach(m=>b.append(mr(m)));
+    if(t.n.startsWith('ŁKS'))LKS=t.m.filter(m=>!['FT','AET','PEN'].includes(m.s)).slice(0,2)});
   if(j.err.length)b.append(el('p','err',j.err.join(' | ')));
+  cd();
+  const T=$('tb');T.textContent='';
+  if(!j.table.length){T.textContent='Brak tabeli.';return}
+  const t=el('table');j.table.forEach(x=>{const r=el('tr');const me=/lks|łks/i.test(x.n);
+    [x.r,x.n,x.p,x.pts].forEach((v,i)=>{const c=el('td','',v);if(me)c.style.color='var(--y)';if(i==1)c.style.textAlign='left';r.append(c)});t.append(r)});
+  T.append(t);
 }).catch(()=>$('mt2').textContent='Mecze niedostępne');
+fetch('/api/today').then(r=>r.json()).then(j=>{const b=$('td2');b.textContent='';
+  if(j.off){b.textContent='Wymaga klucza APIFOOTBALL_KEY.';return}
+  if(!j.m.length)b.append(el('p','sm','Brak meczów z wybranych lig.'));j.m.forEach(m=>b.append(mr(m)));
+  if(j.err)b.append(el('p','err',j.err))}).catch(()=>$('td2').textContent='Niedostępne');
+fetch('/api/trains').then(r=>r.json()).then(j=>{const b=$('pk');b.textContent='';
+  if(!j.dep.length&&!j.arr.length){b.textContent='Nie udało się pobrać rozkładu.';return}
+  [['Odjazdy',j.dep,'b'],['Przyjazdy',j.arr,'a']].forEach(([n,l,k])=>{b.append(el('div','tm',n));
+    l.slice(0,5).forEach(x=>{const r=el('div','r');r.append(el('b','',x.t+(x.j?' ↻':'')),el('span','',(k=='b'?'→ ':'← ')+x[k]+' · '+x.nm));b.append(r)})});
+  b.append(el('p','sm','Rozkład bez opóźnień. ↻ = jutro.'));
+  const a=el('a');a.href='https://portalpasazera.pl/';a.target='_blank';a.rel='noopener';a.textContent='Opóźnienia: Portal Pasażera →';a.style.cssText='color:var(--y);font-size:13px';b.append(a);
+}).catch(()=>$('pk').textContent='Rozkład niedostępny');
+fetch('/api/apps').then(r=>r.json()).then(j=>{const g=j.gym,b=$('gy');b.textContent='';
+  if(g.err){b.append(el('p','sm',g.err=='401'?'Aplikacja wymaga PIN-u: dodaj zmienną GYM_PIN w Vercelu.':'Brak danych z aplikacji.'))}
+  else{const d=el('div');d.append(el('span','sm','Następny trening'));b.append(d,el('div','big',g.next));
+    b.append(el('p','sm',(g.last?'Ostatni: '+g.last.d.split('-').reverse().join('.')+' ('+g.last.p+') · ':'')+'tydzień: '+g.week+' · miesiąc: '+g.month+' · razem: '+g.total))}
+  const w=$('bw');w.textContent='';
+  if(!j.beer.length){w.textContent='Brak danych.';return}
+  const t=el('table');j.beer.forEach(u=>{const r=el('tr');[u.n,u.c+' ogółem',u.w+' / '+u.m].forEach((v,i)=>{const c=el('td','',v);if(i==0)c.style.textAlign='left';r.append(c)});t.append(r)});
+  w.append(t,el('p','sm','Kolumna 3: tydzień / miesiąc.'));
+}).catch(()=>{$('gy').textContent='Niedostępne';$('bw').textContent='Niedostępne'});
 fetch('/api/youtube').then(r=>r.json()).then(j=>{const b=$('yt');b.textContent='';
   j.items.slice(0,24).forEach(i=>{const a=el('a');a.href=i.l;a.target='_blank';a.rel='noopener';
     if(i.i){const m=el('img');m.src=i.i;m.loading='lazy';m.alt='';a.append(m)}

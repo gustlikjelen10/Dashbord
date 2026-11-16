@@ -55,7 +55,7 @@ td:nth-child(n+2){text-align:right;font-family:var(--mono);font-size:13px}td:las
 .js img{width:100%;max-height:260px;object-fit:contain;background:#0b0f13;border:1px solid var(--bd);display:block;margin-bottom:6px}
 .sc{max-height:200px;overflow:auto}.sc.t{max-height:260px}.cdg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.cdg div{border:1px solid var(--bd);padding:8px}.cdg b{display:block;font:700 28px var(--mono);color:var(--y);line-height:1.1}.cdg span{font-size:13px;color:var(--mu)}
 .ap .big{font:700 44px var(--mono);color:var(--y);line-height:1}.ap td:first-child{width:auto}
-.lk{grid-column:1/-1}.lk .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.lk .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
 .lk a{border:1px solid var(--bd);padding:8px;color:var(--tx);text-decoration:none;font-weight:700;border-radius:2px}.lk a:hover{border-color:var(--y);color:var(--y)}
 .lk .all{width:100%;margin-top:12px;padding:12px;font:700 13px var(--mono);background:var(--r);border:0;color:#fff;cursor:pointer;border-radius:2px}
 
@@ -233,7 +233,7 @@ fetch('/api/youtube').then(r=>r.json()).then(j=>{const b=$('yt');b.textContent='
   j.items.slice(0,24).forEach(i=>{const a=el('a');a.href=i.l;a.target='_blank';a.rel='noopener';
     if(i.i){const m=el('img');m.src=i.i;m.loading='lazy';m.alt='';a.append(m)}
     a.append(i.t.slice(0,90),el('small','',i.c+' · '+new Date(i.d).toLocaleDateString('pl-PL',{day:'numeric',month:'short'})));b.append(a)});
-  if(!j.items.length)b.textContent='Brak filmów.'}).catch(()=>$('yt').textContent='YouTube niedostępny');
+  if(!j.items.length)b.textContent='Brak filmów'+(j.failed&&j.failed.length?' ('+j.failed.length+' kanałów bez odpowiedzi'+(j.e?': '+j.e:'')+')':'')+'.'}).catch(()=>$('yt').textContent='YouTube niedostępny');
 fetch('/api/koszulka').then(r=>r.json()).then(r=>{const b=$('js');b.textContent='';
   if(r.err||!r.j){b.textContent='Brak danych z katalogu.';return}
   const j=r.j;b.className='b js';

@@ -15,14 +15,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);line-height:1.
 .dt{font-size:15px}.dt small{color:var(--y);margin-left:8px}
 .clk{font:700 15px var(--mono);margin-left:auto}
 .btn{font:700 12px var(--mono);letter-spacing:.06em;color:#fff;background:var(--r);padding:6px 10px;text-decoration:none;border-radius:2px}
-.grid{display:grid;gap:10px;padding:10px;max-width:1500px;margin:0 auto}
-@media(min-width:1000px){.grid{grid-template-columns:340px minmax(0,1fr) 340px;align-items:start}}
-.col{display:grid;gap:10px;min-width:0}
+.grid{display:grid;gap:8px;padding:8px;max-width:1900px;margin:0 auto}
+@media(min-width:800px){.grid{grid-template-columns:1fr 1fr;align-items:start}}
+@media(min-width:1250px){.grid{grid-template-columns:300px minmax(0,1fr) 300px 300px}}
+.col{display:grid;gap:8px;min-width:0}
 .p{background:var(--pn);border:1px solid var(--bd);border-radius:2px;min-width:0}
-.p>header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--bd)}
+.p>header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--bd)}
 h2{font:700 11px var(--mono);letter-spacing:.14em;text-transform:uppercase}
 .pill{font:11px var(--mono);font-style:normal;color:var(--g);border:1px solid #1f5a3a;background:#0f2a1c;padding:1px 8px;border-radius:2px}
-.b{padding:12px}.sm{font-size:13px;color:var(--mu)}.err{color:var(--r);font-size:13px}
+.b{padding:10px}.sm{font-size:13px;color:var(--mu)}.err{color:var(--r);font-size:13px}
 .mx{font-size:19px;line-height:1.3}.mx small{display:block;margin-top:6px;color:var(--y);font:12px var(--mono)}
 .now{display:flex;align-items:center;gap:14px}.now .t{font:700 54px var(--mono);line-height:1}
 .d{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
@@ -53,6 +54,9 @@ td:nth-child(n+2){text-align:right;font-family:var(--mono);font-size:13px}td:las
 .hs div{padding:6px 0;border-bottom:1px solid var(--bd);font-size:14px}.hs b{font:700 12px var(--mono);color:var(--y);margin-right:6px}
 .mt .tm{font:700 11px var(--mono);letter-spacing:.1em;color:var(--g);margin:10px 0 2px;text-transform:uppercase}.mt .tm:first-child{margin-top:0}.mt .r{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:14px}.mt .r b{font:700 12px var(--mono);color:var(--y);min-width:74px}.mt .r.lv b{color:var(--r)}
 .yt{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;max-height:60vh;overflow:auto}.yt a{color:inherit;text-decoration:none;font-size:14px;font-weight:700}.yt a:hover{color:var(--y)}.yt img{width:100%;aspect-ratio:16/9;object-fit:cover;border:1px solid var(--bd);display:block;margin-bottom:4px}.yt small{display:block;color:var(--mu);font:11px var(--mono);font-weight:400}
+.tl{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px}.tl a{border:1px solid var(--bd);padding:8px;color:var(--tx);text-decoration:none;font-weight:700;border-radius:2px;font-size:14px}.tl a:hover{border-color:var(--y);color:var(--y)}
+#dailyVersesWrapper{font-size:17px;line-height:1.35}#dailyVersesWrapper a{color:var(--y);text-decoration:none;font-weight:700}
+.js img{width:100%;max-height:260px;object-fit:contain;background:#0b0f13;border:1px solid var(--bd);display:block;margin-bottom:6px}
 .sc{max-height:200px;overflow:auto}.sc.t{max-height:260px}.cdg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.cdg div{border:1px solid var(--bd);padding:8px}.cdg b{display:block;font:700 28px var(--mono);color:var(--y);line-height:1.1}.cdg span{font-size:13px;color:var(--mu)}
 .ap .big{font:700 44px var(--mono);color:var(--y);line-height:1}.ap td:first-child{width:auto}
 .lk{grid-column:1/-1}.lk .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
@@ -65,29 +69,34 @@ td:nth-child(n+2){text-align:right;font-family:var(--mono);font-size:13px}td:las
 <div class="grid">
 <div class="col">
 <section class="p"><header><h2>Maksyma dnia</h2></header><div class="b mx" id="mx"></div></section>
+<section class="p"><header><h2>Werset dnia</h2><em class="pill">UBG</em></header><div class="b" id="vs"><div id="dailyVersesWrapper">Ładuję…</div></div></section>
 <section class="p"><header><h2>Pogoda · Piotrków</h2></header><div class="b" id="wx">Ładuję…</div></section>
-<section class="p"><header><h2>Radar opadów</h2><em class="pill">WINDY</em></header><div class="b" style="padding:0"><iframe title="Radar Windy" loading="lazy" style="width:100%;height:340px;border:0;display:block" src="https://embed.windy.com/embed2.html?lat=51.405&lon=19.703&detailLat=51.405&detailLon=19.703&zoom=7&level=surface&overlay=radar&product=radar&menu=&message=&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"></iframe></div></section>
 <section class="p"><header><h2>Bieg dnia</h2></header><div class="b"><div class="sun" id="sun"></div><div id="aq"></div><div id="al"></div></div></section>
-<section class="p bus"><header><h2>Autobusy</h2><em class="pill">KOSTROMSKA – BELZACKA</em></header><div class="b lnk">
-<svg viewBox="0 0 240 70" aria-hidden="true"><rect x="10" y="8" width="200" height="44" fill="#e8eaed"/><rect x="20" y="16" width="30" height="18" fill="#4d7cff"/><rect x="58" y="16" width="30" height="18" fill="#4d7cff"/><rect x="96" y="16" width="30" height="18" fill="#4d7cff"/><rect x="134" y="16" width="30" height="18" fill="#4d7cff"/><rect x="172" y="12" width="30" height="40" fill="#ffc933"/><circle cx="52" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><circle cx="168" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><rect x="10" y="40" width="160" height="4" fill="#ff5a4d"/></svg>
-<a href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">Odjazdy na żywo →</a>
-<a href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład jazdy MZK →</a></div></section>
-<section class="p"><header><h2>PKP · Piotrków Tryb.</h2><em class="pill">WG ROZKŁADU</em></header><div class="b" id="pk">Ładuję…</div></section>
-<section class="p"><header><h2>Kamera · Rynek</h2><em class="pill" id="cm">TOYA</em></header><div class="b lnk"><video id="cam" muted autoplay playsinline controls style="width:100%;display:none"></video><a href="https://go.toya.net.pl/25-kamery" target="_blank" rel="noopener">TOYA · kamery miejskie →</a><a href="https://www.windy.com/webcams/1621006350" target="_blank" rel="noopener">Rynek Trybunalski (Windy) →</a></div></section>
+<section class="p"><header><h2>Radar opadów</h2><em class="pill">WINDY</em></header><div class="b" style="padding:0"><iframe title="Radar Windy" loading="lazy" style="width:100%;height:340px;border:0;display:block" src="https://embed.windy.com/embed2.html?lat=51.405&lon=19.703&detailLat=51.405&detailLon=19.703&zoom=7&level=surface&overlay=radar&product=radar&menu=&message=&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"></iframe></div></section>
 </div>
 <div class="col">
 <section class="p"><header><h2>Wiadomości</h2><em class="pill" id="nc"></em></header><div class="b"><div class="tiles" id="tl"></div><div class="nl" id="nw">Ładuję…</div></div></section>
+<section class="p"><header><h2>Wydarzenia · Łódź i okolice</h2></header><div class="b"><div class="tl" id="ev"></div></div></section>
 <section class="p"><header><h2>YouTube · nowości z subskrypcji</h2></header><div class="b"><div class="yt" id="yt">Ładuję…</div></div></section>
 </div>
 <div class="col">
 <section class="p mt"><header><h2>Mecze</h2></header><div class="b" id="mt2">Ładuję…</div><div class="b" style="padding-top:0"><div class="tm">Dziś na świecie</div><div class="sc" id="td2">Ładuję…</div></div></section>
 <section class="p"><header><h2>Odliczanie</h2></header><div class="b"><div class="cdg" id="cd"></div></div></section>
-<section class="p"><header><h2>Tabela · I liga</h2></header><div class="b"><div class="sc t" id="tb">Ładuję…</div></div></section>
 <section class="p"><header><h2>Kalendarz</h2></header><div class="b" id="cal">Ładuję…</div></section>
 <section class="p"><header><h2>Waluty i akcje</h2><em class="pill" id="mt"></em></header><div class="b" id="mk">Ładuję…</div></section>
+<section class="p"><header><h2>Dziś w historii</h2></header><div class="b hs" id="hs">Ładuję…</div></section>
+</div>
+<div class="col">
+<section class="p bus"><header><h2>Autobusy</h2><em class="pill">KOSTROMSKA – BELZACKA</em></header><div class="b lnk">
+<svg viewBox="0 0 240 70" aria-hidden="true"><rect x="10" y="8" width="200" height="44" fill="#e8eaed"/><rect x="20" y="16" width="30" height="18" fill="#4d7cff"/><rect x="58" y="16" width="30" height="18" fill="#4d7cff"/><rect x="96" y="16" width="30" height="18" fill="#4d7cff"/><rect x="134" y="16" width="30" height="18" fill="#4d7cff"/><rect x="172" y="12" width="30" height="40" fill="#ffc933"/><circle cx="52" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><circle cx="168" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><rect x="10" y="40" width="160" height="4" fill="#ff5a4d"/></svg>
+<a href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">Odjazdy na żywo →</a>
+<a href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład jazdy MZK →</a></div></section>
+<section class="p"><header><h2>PKP · Piotrków Tryb.</h2><em class="pill">WG ROZKŁADU</em></header><div class="b" id="pk">Ładuję…</div></section>
+<section class="p"><header><h2>Kamera · Rynek</h2><em class="pill" id="cm">TOYA</em></header><div class="b lnk"><video id="cam" muted autoplay playsinline controls style="width:100%;display:none"></video><a href="https://go.toya.net.pl/25-kamery" target="_blank" rel="noopener">TOYA · kamery miejskie →</a></div></section>
+<section class="p"><header><h2>Koszulka · ostatnio dodana</h2><a class="pill" style="text-decoration:none" href="https://koszulki-kolekcja.vercel.app/" target="_blank" rel="noopener">KATALOG →</a></header><div class="b" id="js">Ładuję…</div></section>
+<section class="p"><header><h2>Samoloty nad Piotrkowem</h2><em class="pill" id="plc">…</em></header><div class="b"><svg viewBox="0 0 200 200" style="width:100%;max-width:240px;display:block;margin:0 auto 8px;color:var(--mu)"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="100" cy="100" r="30"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="90"/><path d="M100 8v184M8 100h184"/></g><circle cx="100" cy="100" r="3" fill="#ffc933"/><g id="pg"></g></svg><div class="sc" id="pl">Ładuję…</div></div></section>
 <section class="p ap"><header><h2>Siłownia</h2><a class="pill" style="text-decoration:none" href="https://silownia-v1.vercel.app" target="_blank" rel="noopener">OTWÓRZ →</a></header><div class="b" id="gy">Ładuję…</div></section>
 <section class="p ap"><header><h2>Piwko · ranking</h2><a class="pill" style="text-decoration:none" href="https://piwko-eight.vercel.app" target="_blank" rel="noopener">OTWÓRZ →</a></header><div class="b" id="bw">Ładuję…</div></section>
-<section class="p"><header><h2>Dziś w historii</h2></header><div class="b hs" id="hs">Ładuję…</div></section>
 </div>
 <section class="p lk"><header><h2>Szybkie linki</h2></header><div class="b" id="lk"></div></section>
 </div>
@@ -175,24 +184,15 @@ const C={Poland:'Polska',Germany:'Niemcy',France:'Francja',Italy:'Włochy',Spain
 const pl=s=>s.replace(/^(.*?)((?: U\d\d| W)?)$/,(m,a,b)=>(C[a]||a)+b);
 const mr=m=>{const live=['1H','HT','2H','ET','P','LIVE'].includes(m.s),fin=['FT','AET','PEN'].includes(m.s);
   const r=el('div','r'+(live?' lv':''));r.append(el('b','',live?'NA ŻYWO':fin?'koniec':new Date(m.d).toLocaleString('pl-PL',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})),el('span','',pl(m.h)+' '+(m.gh!=null?m.gh+':'+m.ga:'–')+' '+pl(m.a)));return r};
-let LKS=[];
 function cd(){const b=$('cd');b.textContent='';const n=new Date(),y=n.getFullYear();
   const T=[['do Wigilii',new Date(y,11,24)],['do końca roku',new Date(y,11,31,23,59,59)]];
-  LKS.forEach(m=>T.push(['ŁKS – '+pl(m.h.match(/lks|łks/i)?m.a:m.h),new Date(m.d)]));
-  T.forEach(([l,t])=>{if(t<n&&!l.startsWith('ŁKS'))t=new Date(t.getFullYear()+1,t.getMonth(),t.getDate(),t.getHours(),t.getMinutes());
+  T.forEach(([l,t])=>{if(t<n)t=new Date(t.getFullYear()+1,t.getMonth(),t.getDate(),t.getHours(),t.getMinutes());
     const d=Math.ceil((t-n)/864e5);if(d<0)return;const x=el('div');x.append(el('b','',d===0?'dziś':String(d)),el('span','',(d===0?'':d===1?'dzień ':'dni ')+l));b.append(x)})}
 cd();
 fetch('/api/matches').then(r=>r.json()).then(j=>{const b=$('mt2');b.textContent='';
-  if(j.off){b.innerHTML='<p class="sm">Dodaj klucz APIFOOTBALL_KEY w Vercelu (api-football.com, plan darmowy).</p>';$('tb').textContent='';return}
-  j.teams.forEach(t=>{b.append(el('div','tm',t.n));if(!t.m.length)b.append(el('p','sm','Brak zaplanowanych meczów.'));t.m.slice(0,3).forEach(m=>b.append(mr(m)));
-    if(t.n.startsWith('ŁKS'))LKS=t.m.filter(m=>!['FT','AET','PEN'].includes(m.s)).slice(0,2)});
+  if(j.off){b.innerHTML='<p class="sm">Dodaj klucz APIFOOTBALL_KEY w Vercelu (api-football.com, plan darmowy).</p>';return}
+  j.teams.forEach(t=>{b.append(el('div','tm',t.n));if(!t.m.length)b.append(el('p','sm','Brak zaplanowanych meczów.'));t.m.slice(0,3).forEach(m=>b.append(mr(m)))});
   if(j.err.length)b.append(el('p','err',j.err.join(' | ')));
-  cd();
-  const T=$('tb');T.textContent='';
-  if(!j.table.length){T.textContent='Brak tabeli.';return}
-  const t=el('table');j.table.forEach(x=>{const r=el('tr');const me=/lks|łks/i.test(x.n);
-    [x.r,x.n,x.p,x.pts].forEach((v,i)=>{const c=el('td','',v);if(me)c.style.color='var(--y)';if(i==1)c.style.textAlign='left';r.append(c)});t.append(r)});
-  T.append(t);
 }).catch(()=>$('mt2').textContent='Mecze niedostępne');
 fetch('/api/today').then(r=>r.json()).then(j=>{const b=$('td2');b.textContent='';
   if(j.off){b.textContent='Wymaga klucza APIFOOTBALL_KEY.';return}
@@ -219,6 +219,19 @@ fetch('/api/youtube').then(r=>r.json()).then(j=>{const b=$('yt');b.textContent='
     if(i.i){const m=el('img');m.src=i.i;m.loading='lazy';m.alt='';a.append(m)}
     a.append(i.t.slice(0,90),el('small','',i.c+' · '+new Date(i.d).toLocaleDateString('pl-PL',{day:'numeric',month:'short'})));b.append(a)});
   if(!j.items.length)b.textContent='Brak filmów.'}).catch(()=>$('yt').textContent='YouTube niedostępny');
+fetch('/api/koszulka').then(r=>r.json()).then(r=>{const b=$('js');b.textContent='';
+  if(r.err||!r.j){b.textContent='Brak danych z katalogu.';return}
+  const j=r.j;b.className='b js';
+  if(j.img){const m=el('img');m.src=j.img;m.alt='';m.loading='lazy';m.onerror=()=>m.remove();b.append(m)}
+  b.append(el('b','',j.club+(j.season?' · '+j.season:'')),el('p','sm',[j.type,j.manufacturer,j.league,j.country].filter(Boolean).join(' · ')+' · w kolekcji: '+r.n))}).catch(()=>$('js').textContent='Katalog niedostępny');
+function planes(){fetch('/api/planes').then(r=>r.json()).then(j=>{const b=$('pl'),g=$('pg');b.textContent='';g.innerHTML='';
+  if(j.err){$('plc').textContent='BŁĄD';b.textContent='Brak danych o ruchu lotniczym.';return}
+  $('plc').textContent=j.p.length+' w zasięgu';
+  if(!j.p.length)b.append(el('p','sm','Teraz nic nie leci w promieniu 55 km.'));
+  j.p.forEach(a=>{const dx=(a.lo-19.703)*111.32*Math.cos(51.405*Math.PI/180),dy=(a.la-51.405)*110.57,x=100+dx/55.6*90,y=100-dy/55.6*90;
+    if(x>=0&&x<=200&&y>=0&&y<=200)g.insertAdjacentHTML('beforeend','<polygon points="0,-6 4,5 0,3 -4,5" fill="#4d7cff" stroke="#e8eaed" stroke-width="1" transform="translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+Math.round(a.tr)+')"/>');
+    const r=el('div','r');r.append(el('b','',a.f),el('span','',(a.t?a.t+' · ':'')+a.alt+' m · '+a.gs+' km/h · '+a.d+' km'));b.append(r)})}).catch(()=>{$('plc').textContent='BŁĄD'})}
+planes();setInterval(planes,30000);
 const CC={pilka:'#2ecc71',kraj:'#4d7cff',kultura:'#ffc933',okazje:'#ff5a4d'};
 let items=[],seen=0,off=new Set(),failed=[];
 try{seen=+localStorage.getItem('seen')||0;off=new Set(JSON.parse(localStorage.getItem('off')||'[]'))}catch(e){}
@@ -252,9 +265,10 @@ const L=[
 ['Pieniądze i zakupy',[['Vinted','https://www.vinted.pl/'],['Pepper','https://www.pepper.pl/'],['Finax','https://www.finax.eu/pl'],['Subiektywnie','https://subiektywnieofinansach.pl/']]],
 ['Narzędzia AI',[['Perplexity','https://www.perplexity.ai/'],['NotebookLM','https://notebooklm.google.com/'],['duck.ai','https://duck.ai/'],['arena.ai','https://arena.ai/video']]],
 ['Inne',[['JustWatch','https://www.justwatch.com/pl/nowe'],['Flight over Earth','https://flightoverearth.com/'],['World Monitor','https://www.worldmonitor.app/']]]];
-const EV=['https://www.club-bogart.com/index.php/ct-menu-item-5','https://www.orzel.lodz.pl/#','https://atlasarena.pl/aktualnosci/','https://wytwornia.pl/repertuar/','https://www.operalodz.com/Kalendarz,234','https://nowy.pl/repertuar/','https://teatr-muzyczny.lodz.pl/repertuar/','https://teatrjaracza.pl/repertuar','https://www.spodekkatowice.pl/pl/wydarzenia/61/','https://torwar.cos.pl/151/cos-torwar-kalendarz-wydarzen','https://www.livenation.pl/event/allevents','https://progresja.com/wydarzenia/','https://www.filharmonia.lodz.pl/repertuar-filharmonii-lodzkiej?month='+(now.getMonth()+1)+'&year='+now.getFullYear(),'https://ppw-ewenement.pl/pages/eventy','https://ergoarena.pl/kalendarz-wydarzen/'];
+const EV=[['Bogart','https://www.club-bogart.com/index.php/ct-menu-item-5'],['Orzeł','https://www.orzel.lodz.pl/#'],['Atlas Arena','https://atlasarena.pl/aktualnosci/'],['Wytwórnia','https://wytwornia.pl/repertuar/'],['Opera Łódź','https://www.operalodz.com/Kalendarz,234'],['Nowy.pl','https://nowy.pl/repertuar/'],['Teatr Muzyczny','https://teatr-muzyczny.lodz.pl/repertuar/'],['Teatr Jaracza','https://teatrjaracza.pl/repertuar'],['Spodek','https://www.spodekkatowice.pl/pl/wydarzenia/61/'],['Torwar','https://torwar.cos.pl/151/cos-torwar-kalendarz-wydarzen'],['Live Nation','https://www.livenation.pl/event/allevents'],['Progresja','https://progresja.com/wydarzenia/'],['Filharmonia Łódź','https://www.filharmonia.lodz.pl/repertuar-filharmonii-lodzkiej?month='+(now.getMonth()+1)+'&year='+now.getFullYear()],['Ewenement','https://ppw-ewenement.pl/pages/eventy'],['Ergo Arena','https://ergoarena.pl/kalendarz-wydarzen/']];
+EV.forEach(([t,u])=>{const x=el('a','',t);x.href=u;x.target='_blank';x.rel='noopener';$('ev').append(x)});
 L.forEach(([n,a])=>{const d=el('div','g');a.forEach(([t,u])=>{const x=el('a','',t);x.href=u;x.target='_blank';x.rel='noopener';d.append(x)});$('lk').append(el('h3','',n),d)});
-const bt=el('button','all','Otwórz wszystkie repertuary ('+EV.length+')');bt.className='all';bt.onclick=()=>EV.forEach(u=>window.open(u,'_blank','noopener'));$('lk').append(bt);
 </script>
+<script async defer src="https://dailyverses.net/get/verse.js?language=ubg"></script>
 </body>
 </html>

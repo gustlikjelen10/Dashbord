@@ -80,7 +80,7 @@ html,body{height:100%}body{display:flex;flex-direction:column}
 .yt{max-height:none;grid-template-columns:1fr}.yt a{display:flex;gap:10px;align-items:flex-start}.yt img{width:96px;flex:none;margin:0}
 .p>.b,.p>.tp{max-height:72vh}
 @media(min-width:800px){.grid{grid-template-columns:1fr 1fr;align-content:start}.strip{grid-template-columns:1fr 1fr}}
-@media(min-width:1100px) and (min-height:560px){
+@media(min-width:99999px){
  body{height:100vh;overflow:hidden}
  .strip{grid-template-columns:1fr 1.3fr auto}
  .grid{grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
@@ -89,10 +89,40 @@ html,body{height:100%}body{display:flex;flex-direction:column}
 }
 .r{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:14px}.r b{font:700 12px var(--mono);color:var(--y);min-width:74px}.r.lv b{color:var(--r)}.tm{font:700 11px var(--mono);letter-spacing:.1em;color:var(--g);margin:10px 0 2px;text-transform:uppercase}.tm:first-child{margin-top:0}
 .r small{display:block}.lpb{position:absolute;inset:0;width:100%;background:#0a0d10;color:var(--y);font:700 15px var(--mono);border:0;cursor:pointer}.live .tp.fr.on{min-height:200px}
+
+:root{--font:'SF Mono',Monaco,'Cascadia Code','Fira Code','DejaVu Sans Mono','Liberation Mono',Consolas,monospace}
+body{font-size:12px;line-height:1.35}
+h2,.pill{font-size:10px}
+.top{padding:calc(4px + env(safe-area-inset-top)) 10px 4px;gap:10px}.logo,.dt,.clk{font-size:12px}
+button.btn{border:0;cursor:pointer;font-size:11px;padding:4px 8px}.rad{display:flex;align-items:center;gap:6px}.rad input{width:70px;padding:0;border:0}
+.strip{gap:6px;padding:6px 6px 0}.strip .b{padding:4px 8px;max-height:42px;overflow:hidden}
+.mx{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mx small{font-size:10px}
+#dailyVersesWrapper{font-size:11px;line-height:1.25;max-height:32px;overflow:auto}
+.cdg{gap:6px}.cdg div{padding:2px 8px}.cdg b{font-size:14px}.cdg span{font-size:10px}
+.grid{gap:6px;padding:6px}.p>header{padding:5px 8px}.p .b{padding:8px}
+.now .t{font-size:34px}.now svg{width:52px;height:52px}.d{margin-top:8px}.d div{font-size:11px}.d svg{width:26px;height:26px}
+.nl b{font-size:13px}.nl small{font-size:10px}.nl a{gap:8px;padding:6px 0}.nl img,.nl .big img{width:64px;height:64px}
+td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-size:11px}
+.r{font-size:11px;padding:3px 0}.r b{font-size:10px;min-width:64px}
+.ev{font-size:11px;padding:4px 0}.ev b{font-size:10px;min-width:44px}.dy{font-size:10px}
+.tiles{gap:4px;margin-bottom:6px;max-height:60px}.tiles button{font-size:10px;padding:2px 6px}.tabs button{font-size:10px;padding:1px 6px}
+.lnk a{font-size:11px;padding:6px 8px;margin-top:4px}.hs div{font-size:11px;padding:4px 0}
+.yt a{font-size:11px}.yt small{font-size:10px}.yt img{width:72px}.w2 .yt{grid-template-columns:1fr 1fr}
+.sm,h3{font-size:10px}.ap .big{font-size:28px}.sun svg{max-width:150px}.bus svg{max-height:40px}
+.pl2{display:flex;gap:8px;align-items:flex-start}.pl2>svg{width:112px;flex:none}.pl2>div{flex:1;min-width:0}
+.tp.fr.on{min-height:0}.jr img{max-height:110px}
+@media(min-width:800px) and (max-width:1399px){.news,.live{grid-column:1/-1}}
+@media(min-width:1400px) and (min-height:560px){
+ body{height:100vh;overflow:hidden}
+ .strip{grid-template-columns:1.2fr 1.6fr auto}
+ .grid{grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));align-content:stretch;grid-auto-flow:dense}
+ .news{grid-column:1/4;grid-row:1/3}.live{grid-column:1/4;grid-row:3}.w2{grid-column:span 2}
+ .p>.b,.p>.tp,.nl{max-height:none}
+}
 </style>
 </head>
 <body>
-<div class="top"><span class="logo">PULPIT</span><span class="pill">NA ŻYWO</span><span class="dt"><span id="dt"></span><small id="im"></small></span><a class="btn" href="https://polskieradio24.pl/" target="_blank" rel="noopener">▶ POLSKIE RADIO 24</a><span class="clk" id="ck"></span></div>
+<div class="top"><span class="logo">PULPIT</span><span class="pill">NA ŻYWO</span><span class="dt"><span id="dt"></span><small id="im"></small></span><span class="rad"><button class="btn" id="rb">▶ POLSKIE RADIO 24</button><input type="range" id="rv" min="0" max="1" step="0.05" value="0.6" title="Głośność"><span class="sm" id="rs"></span><audio id="ra" preload="none"></audio></span><span class="clk" id="ck"></span></div>
 <div class="strip">
 <section class="p"><div class="b mx" id="mx"></div></section>
 <section class="p"><div class="b" id="vs"><div id="dailyVersesWrapper">Ładuję…</div></div></section>
@@ -101,27 +131,22 @@ html,body{height:100%}body{display:flex;flex-direction:column}
 <div class="grid">
 <section class="p news"><header><h2>Wiadomości</h2><em class="pill" id="nc"></em></header><div class="b"><div class="tiles" id="tl"></div><div class="nl" id="nw">Ładuję…</div></div></section>
 <section class="p live"><header><h2>Na żywo</h2><div class="tabs" id="lt"></div><a class="pill" id="ly" style="text-decoration:none" href="https://www.youtube.com" target="_blank" rel="noopener">YT →</a></header><div class="b tp on fr" id="lv"></div></section>
-<section class="p"><header><h2>Pogoda</h2><nav class="tabs"><button class="on" data-t="w1">Teraz</button><button data-t="w2">Radar</button><button data-t="w3">Niebo</button></nav></header>
+<section class="p"><header><h2>Pogoda</h2><nav class="tabs"><button class="on" data-t="w1">Teraz</button><button data-t="w2">Radar</button><button data-t="w4">Kamera</button></nav></header>
 <div class="b tp on" id="w1"><div id="wx">Ładuję…</div></div>
 <div class="b tp fr" id="w2"><iframe title="Radar Windy" loading="lazy" src="https://embed.windy.com/embed2.html?lat=51.405&lon=19.703&detailLat=51.405&detailLon=19.703&zoom=7&level=surface&overlay=radar&product=radar&menu=&message=&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"></iframe></div>
-<div class="b tp" id="w3"><div class="sun" id="sun"></div><div id="aq"></div><div id="al"></div></div></section>
-<section class="p"><header><h2>Kalendarz</h2><nav class="tabs"><button class="on" data-t="c1">Plan</button><button data-t="c2">W historii</button></nav></header>
-<div class="b tp on" id="c1"><div id="cal">Ładuję…</div></div><div class="b tp hs" id="c2"><div id="hs">Ładuję…</div></div></section>
-<section class="p"><header><h2>Transport</h2><nav class="tabs"><button class="on" data-t="t1">Autobus</button><button data-t="t2">PKP</button><button data-t="t3">Samoloty</button></nav></header>
-<div class="b tp on lnk bus" id="t1"><em class="pill">KOSTROMSKA – BELZACKA</em><svg viewBox="0 0 240 70" aria-hidden="true"><rect x="10" y="8" width="200" height="44" fill="#e8eaed"/><rect x="20" y="16" width="30" height="18" fill="#4d7cff"/><rect x="58" y="16" width="30" height="18" fill="#4d7cff"/><rect x="96" y="16" width="30" height="18" fill="#4d7cff"/><rect x="134" y="16" width="30" height="18" fill="#4d7cff"/><rect x="172" y="12" width="30" height="40" fill="#ffc933"/><circle cx="52" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><circle cx="168" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><rect x="10" y="40" width="160" height="4" fill="#ff5a4d"/></svg><a href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">Odjazdy na żywo →</a><a href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład jazdy MZK →</a></div>
-<div class="b tp" id="t2"><div id="pk">Ładuję…</div></div>
-<div class="b tp" id="t3"><span class="pill" id="plc">…</span><svg viewBox="0 0 200 200" style="width:100%;max-width:240px;display:block;margin:0 auto 8px;color:var(--mu)"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="100" cy="100" r="30"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="90"/><path d="M100 8v184M8 100h184"/></g><circle cx="100" cy="100" r="3" fill="#ffc933"/><g id="pg"></g></svg><div id="pl">Ładuję…</div></div></section>
-<section class="p ap"><header><h2>Moje apki</h2><div class="tabs"><a class="pill" style="text-decoration:none" href="https://silownia-v1.vercel.app" target="_blank" rel="noopener">SIŁOWNIA →</a><a class="pill" style="text-decoration:none" href="https://piwko-eight.vercel.app" target="_blank" rel="noopener">PIWKO →</a></div></header>
-<div class="b"><h3 style="margin-top:0">Siłownia</h3><div id="gy">Ładuję…</div><h3>Piwko · ranking</h3><div id="bw">Ładuję…</div></div></section>
-<section class="p mt"><header><h2>Mecze</h2><nav class="tabs"><button class="on" data-t="g1">Dziś</button><button data-t="g2">Ekstraklasa</button><button data-t="g3">I liga</button></nav></header>
-<div class="b tp on" id="g1"><div id="td2">Ładuję…</div></div><div class="b tp" id="g2"><div id="e1">Ładuję…</div></div><div class="b tp" id="g3"><div id="e2">Ładuję…</div></div></section>
+<div class="b tp lnk" id="w4"><video id="cam" muted autoplay playsinline controls style="width:100%;display:none"></video><span class="sm" id="cm">TOYA</span><a href="https://go.toya.net.pl/25-kamery" target="_blank" rel="noopener">TOYA · kamery miejskie →</a></div></section>
+<section class="p"><header><h2>Bieg dnia</h2></header><div class="b"><div class="sun" id="sun"></div><div id="aq"></div><div id="al"></div></div></section>
+<section class="p"><header><h2>Kalendarz</h2></header><div class="b"><div id="cal">Ładuję…</div></div></section>
+<section class="p"><header><h2>Dziś w historii</h2></header><div class="b hs"><div id="hs">Ładuję…</div></div></section>
+<section class="p bus"><header><h2>Autobus</h2><em class="pill">KOSTROMSKA – BELZACKA</em></header><div class="b lnk"><svg viewBox="0 0 240 70" aria-hidden="true"><rect x="10" y="8" width="200" height="44" fill="#e8eaed"/><rect x="20" y="16" width="30" height="18" fill="#4d7cff"/><rect x="58" y="16" width="30" height="18" fill="#4d7cff"/><rect x="96" y="16" width="30" height="18" fill="#4d7cff"/><rect x="134" y="16" width="30" height="18" fill="#4d7cff"/><rect x="172" y="12" width="30" height="40" fill="#ffc933"/><circle cx="52" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><circle cx="168" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><rect x="10" y="40" width="160" height="4" fill="#ff5a4d"/></svg><a href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">Odjazdy na żywo →</a><a href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład MZK →</a></div></section>
+<section class="p"><header><h2>PKP · Piotrków</h2><em class="pill">WG ROZKŁADU</em></header><div class="b"><div id="pk">Ładuję…</div></div></section>
+<section class="p mt"><header><h2>Mecze dziś</h2></header><div class="b"><div id="td2">Ładuję…</div></div></section>
+<section class="p mt"><header><h2>Ligi · najbliższe</h2></header><div class="b"><div class="tm">Ekstraklasa</div><div id="e1">Ładuję…</div><div class="tm">I liga</div><div id="e2">Ładuję…</div></div></section>
 <section class="p"><header><h2>Waluty i akcje</h2><em class="pill" id="mt"></em></header><div class="b" id="mk">Ładuję…</div></section>
-<section class="p"><header><h2>Media</h2><nav class="tabs"><button class="on" data-t="m1">YouTube</button><button data-t="m2">Kamera</button><button data-t="m3">Koszulka</button></nav></header>
-<div class="b tp on" id="m1"><div class="yt" id="yt">Ładuję…</div></div>
-<div class="b tp lnk" id="m2"><video id="cam" muted autoplay playsinline controls style="width:100%;display:none"></video><span class="sm" id="cm">TOYA</span><a href="https://go.toya.net.pl/25-kamery" target="_blank" rel="noopener">TOYA · kamery miejskie →</a></div>
-<div class="b tp js" id="m3"><div id="js">Ładuję…</div><a class="pill" style="text-decoration:none;display:inline-block;margin-top:6px" href="https://koszulki-kolekcja.vercel.app/" target="_blank" rel="noopener">KATALOG →</a></div></section>
-<section class="p lk"><header><h2>Linki</h2><nav class="tabs"><button class="on" data-t="l1">Szybkie</button><button data-t="l2">Łódź</button></nav></header>
-<div class="b tp on" id="l1"><div id="lk"></div></div><div class="b tp" id="l2"><div class="tl" id="ev"></div></div></section>
+<section class="p ap"><header><h2>Moje apki</h2><div class="tabs"><a class="pill" style="text-decoration:none" href="https://silownia-v1.vercel.app" target="_blank" rel="noopener">SIŁ. →</a><a class="pill" style="text-decoration:none" href="https://piwko-eight.vercel.app" target="_blank" rel="noopener">PIWKO →</a></div></header><div class="b"><h3 style="margin-top:0">Siłownia</h3><div id="gy">Ładuję…</div><h3>Piwko · ranking</h3><div id="bw">Ładuję…</div></div></section>
+<section class="p w2"><header><h2>Samoloty nad Piotrkowem</h2><em class="pill" id="plc">…</em></header><div class="b"><div class="pl2"><svg viewBox="0 0 200 200" style="width:100%;max-width:240px;display:block;margin:0 auto 8px;color:var(--mu)"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="100" cy="100" r="30"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="90"/><path d="M100 8v184M8 100h184"/></g><circle cx="100" cy="100" r="3" fill="#ffc933"/><g id="pg"></g></svg><div id="pl">Ładuję…</div></div></div></section>
+<section class="p w2"><header><h2>YouTube · nowości</h2></header><div class="b"><div class="yt" id="yt">Ładuję…</div></div></section>
+<section class="p jr"><header><h2>Koszulka</h2><a class="pill" style="text-decoration:none" href="https://koszulki-kolekcja.vercel.app/" target="_blank" rel="noopener">KATALOG →</a></header><div class="b"><div id="js">Ładuję…</div></div></section>
 </div>
 <script>
 const $=id=>document.getElementById(id),now=new Date();
@@ -251,14 +276,26 @@ function planes(){fetch('/api/planes').then(r=>r.json()).then(j=>{const b=$('pl'
     const r=el('div','r'),w=el('span');if(a.o)w.append(el('div','',a.o+' → '+a.dd+(a.dc?' · '+a.dc:'')));w.append(el('small','sm',(a.al?a.al+' · ':'')+(a.t?a.t+' · ':'')+a.alt+' m · '+a.gs+' km/h · '+a.d+' km'));r.append(el('b','',a.f),w);b.append(r)})}).catch(()=>{$('plc').textContent='BŁĄD'})}
 planes();setInterval(planes,30000);
 document.querySelectorAll('nav.tabs').forEach(n=>n.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=n.closest('section');n.querySelectorAll('button').forEach(x=>x.className=x===b?'on':'');p.querySelectorAll('.tp').forEach(t=>t.classList.toggle('on',t.id===b.dataset.t))}));
-const LIVE=[['Republika','telewizja_republika']];
+const LIVE=[['TVP Info','tvpinfo']];
 function lvSel(i){[...$('lt').children].forEach((b,k)=>b.className=k===i?'on':'');const q=LIVE[i][1];$('ly').href=/^UC/.test(q)?'https://www.youtube.com/channel/'+q+'/live':'https://www.youtube.com/@'+q+'/live';
   $('lv').innerHTML='';const p=el('button','lpb','▶ Włącz: '+LIVE[i][0]);p.onclick=()=>play(i,p);$('lv').append(p)}
-async function play(i,p){p.textContent='Łączę…';let id=LIVE[i][1];
-  if(!/^UC/.test(id)){try{id=(await (await fetch('/api/live?h='+id)).json()).id}catch(e){id=''}}
-  if(!id){p.textContent='Nie znaleziono kanału. Otwórz na YouTube →';p.onclick=()=>window.open($('ly').href,'_blank');return}
-  const f=document.createElement('iframe');f.src='https://www.youtube.com/embed/live_stream?channel='+id+'&autoplay=1&mute=1';f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;$('lv').innerHTML='';$('lv').append(f)}
+const bad=(p,t)=>{p.textContent=t+' Otwórz na YouTube →';p.onclick=()=>window.open($('ly').href,'_blank');$('lv').innerHTML='';$('lv').append(p)};
+async function play(i,p){p.textContent='Łączę…';let j={};
+  try{j=await (await fetch('/api/live?h='+LIVE[i][1])).json()}catch(e){}
+  if(!j.id&&!j.vid)return bad(p,'Nie znaleziono transmisji.');
+  if(!j.vid){const f=document.createElement('iframe');f.src='https://www.youtube.com/embed/live_stream?channel='+j.id+'&autoplay=1&mute=1';f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;$('lv').innerHTML='';$('lv').append(f);return}
+  if(!window.YT){await new Promise(r=>{window.onYouTubeIframeAPIReady=r;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.append(s)})}
+  $('lv').innerHTML='<div id="yp"></div>';
+  new YT.Player('yp',{width:'100%',height:'100%',videoId:j.vid,playerVars:{autoplay:1,mute:1,playsinline:1},events:{onError:e=>bad(el('button','lpb'),[101,150].includes(e.data)?'Nadawca zablokował osadzanie.':'Błąd odtwarzania ('+e.data+').')}})}
 LIVE.forEach(([n],i)=>{const b=el('button','',n);b.onclick=()=>lvSel(i);$('lt').append(b)});lvSel(0);
+const ra=$('ra'),rb=$('rb');ra.volume=.6;$('rv').oninput=e=>ra.volume=+e.target.value;
+let rurls=null,ri=0;
+rb.onclick=async()=>{
+  if(!ra.paused){ra.pause();rb.textContent='▶ POLSKIE RADIO 24';$('rs').textContent='';return}
+  if(!rurls){$('rs').textContent='łączę…';try{rurls=(await (await fetch('/api/radio')).json()).urls}catch(e){rurls=[]}}
+  if(!rurls.length){$('rs').textContent='brak strumienia';window.open('https://polskieradio24.pl/','_blank');return}
+  ra.src=rurls[ri%rurls.length];try{await ra.play();rb.textContent='■ PR24';$('rs').textContent='gra'}catch(e){ri++;$('rs').textContent='błąd, kliknij ponownie'}};
+ra.onerror=()=>{ri++;$('rs').textContent='błąd strumienia';rb.textContent='▶ POLSKIE RADIO 24'};
 const CC={pilka:'#2ecc71',kraj:'#4d7cff',kultura:'#ffc933',okazje:'#ff5a4d'};
 let items=[],seen=0,off=new Set(),failed=[];
 try{seen=+localStorage.getItem('seen')||0;off=new Set(JSON.parse(localStorage.getItem('off')||'[]'))}catch(e){}
@@ -284,17 +321,6 @@ function tiles(){
 fetch('/api/rss').then(r=>r.json()).then(j=>{items=j.items;failed=j.failed;tiles();rn();
   try{localStorage.setItem('seen',Date.now())}catch(e){}
 }).catch(()=>$('nw').textContent='Nie udało się pobrać wiadomości.');
-const L=[
-['Radio i media',[['Polskie Radio 24','https://polskieradio24.pl/'],['Zero.pl','https://zero.pl/'],['PAP','https://www.pap.pl/'],['Onet','https://wiadomosci.onet.pl/']]],
-['Piotrków',[['Miasto','https://www.piotrkow.pl/'],['ePiotrków','https://epiotrkow.pl/'],['Muzeum','https://muzeumpiotrkow.pl/']]],
-['Piłka',[['90minut','http://www.90minut.pl/'],['Łódzki futbol','https://lodzkifutbol.pl/'],['Okręgówka','https://okregowka.pl/'],['ŁKS kalendarz','https://lkslodz.pl/sekcje/kalendarz-wielosekcyjny/']]],
-['Piłka ręczna',[['Piotrcovia','http://www.piotrcovia.pl/#!'],['Piotrkowianin','https://www.piotrkowianin.pl/']]],
-['Pieniądze i zakupy',[['Vinted','https://www.vinted.pl/'],['Pepper','https://www.pepper.pl/'],['Finax','https://www.finax.eu/pl'],['Subiektywnie','https://subiektywnieofinansach.pl/']]],
-['Narzędzia AI',[['Perplexity','https://www.perplexity.ai/'],['NotebookLM','https://notebooklm.google.com/'],['duck.ai','https://duck.ai/'],['arena.ai','https://arena.ai/video']]],
-['Inne',[['JustWatch','https://www.justwatch.com/pl/nowe'],['Flight over Earth','https://flightoverearth.com/'],['World Monitor','https://www.worldmonitor.app/']]]];
-const EV=[['Bogart','https://www.club-bogart.com/index.php/ct-menu-item-5'],['Orzeł','https://www.orzel.lodz.pl/#'],['Atlas Arena','https://atlasarena.pl/aktualnosci/'],['Wytwórnia','https://wytwornia.pl/repertuar/'],['Opera Łódź','https://www.operalodz.com/Kalendarz,234'],['Nowy.pl','https://nowy.pl/repertuar/'],['Teatr Muzyczny','https://teatr-muzyczny.lodz.pl/repertuar/'],['Teatr Jaracza','https://teatrjaracza.pl/repertuar'],['Spodek','https://www.spodekkatowice.pl/pl/wydarzenia/61/'],['Torwar','https://torwar.cos.pl/151/cos-torwar-kalendarz-wydarzen'],['Live Nation','https://www.livenation.pl/event/allevents'],['Progresja','https://progresja.com/wydarzenia/'],['Filharmonia Łódź','https://www.filharmonia.lodz.pl/repertuar-filharmonii-lodzkiej?month='+(now.getMonth()+1)+'&year='+now.getFullYear()],['Ewenement','https://ppw-ewenement.pl/pages/eventy'],['Ergo Arena','https://ergoarena.pl/kalendarz-wydarzen/']];
-EV.forEach(([t,u])=>{const x=el('a','',t);x.href=u;x.target='_blank';x.rel='noopener';$('ev').append(x)});
-L.forEach(([n,a])=>{const d=el('div','g');a.forEach(([t,u])=>{const x=el('a','',t);x.href=u;x.target='_blank';x.rel='noopener';d.append(x)});$('lk').append(el('h3','',n),d)});
 </script>
 <script async defer src="https://dailyverses.net/get/verse.js?language=ubg"></script>
 </body>

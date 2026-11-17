@@ -141,7 +141,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 <section class="p"><header><h2>Kalendarz</h2></header><div class="b"><div id="cal">Ładuję…</div></div></section>
 <section class="p"><header><h2>Dziś w historii</h2></header><div class="b hs"><div id="hs">Ładuję…</div></div></section>
 <section class="p bus"><header><h2>Autobus</h2><em class="pill" id="bsn">KOSTROMSKA – BELZACKA</em></header><div class="b"><div id="bs">Ładuję…</div><div class="sm" id="bsu"></div><a class="sm" style="color:var(--y)" href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">kiedyprzyjedzie.pl →</a> <a class="sm" style="color:var(--y)" href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład MZK →</a></div></section>
-<section class="p"><header><h2>PKP · Piotrków</h2><em class="pill">WG ROZKŁADU</em></header><div class="b"><div id="pk">Ładuję…</div></div></section>
+<section class="p"><header><h2>PKP · Piotrków</h2><em class="pill" id="pkp">…</em></header><div class="b"><div id="pk">Ładuję…</div></div></section>
 <section class="p mt"><header><h2>Mecze</h2></header><div class="b"><div class="tm">Dziś</div><div id="td2">Ładuję…</div><div class="tm">Ekstraklasa</div><div id="e1">Ładuję…</div><div class="tm">I liga</div><div id="e2">Ładuję…</div></div></section>
 <section class="p"><header><h2>Waluty i akcje</h2><em class="pill" id="mt"></em></header><div class="b" id="mk">Ładuję…</div></section>
 <section class="p ap"><header><h2>Moje apki</h2><div class="tabs"><a class="pill" style="text-decoration:none" href="https://silownia-v1.vercel.app" target="_blank" rel="noopener">SIŁ. →</a><a class="pill" style="text-decoration:none" href="https://piwko-eight.vercel.app" target="_blank" rel="noopener">PIWKO →</a></div></header><div class="b"><h3 style="margin-top:0">Siłownia</h3><div id="gy">Ładuję…</div><h3>Piwko · ranking</h3><div id="bw">Ładuję…</div></div></section>
@@ -242,12 +242,17 @@ const hl=(r,m)=>{if(/legia|lks|łks|poland|polska/i.test(m.h+' '+m.a))r.style.co
 function ml(url,id,empty){fetch(url).then(r=>r.json()).then(j=>{const b=$(id);b.textContent='';
   if(!j.m.length)b.append(el('p','sm',empty));j.m.forEach(m=>b.append(hl(mr(m),m)));if(j.err)b.append(el('p','err',j.err))}).catch(()=>$(id).textContent='Niedostępne')}
 ml('/api/today','td2','Brak meczów z wybranych lig.');ml('/api/today?l=tsdb:4422','e1','Brak zaplanowanych meczów.');ml('/api/today?l=tsdb:4661','e2','Brak danych dla I ligi.');
+const hmz=t=>new Date(t).toLocaleTimeString('pl-PL',{timeZone:'Europe/Warsaw',hour:'2-digit',minute:'2-digit'});
 fetch('/api/trains').then(r=>r.json()).then(j=>{const b=$('pk');b.textContent='';
-  if(!j.dep.length&&!j.arr.length){b.textContent='Nie udało się pobrać rozkładu.';return}
-  [['Odjazdy',j.dep,'b'],['Przyjazdy',j.arr,'a']].forEach(([n,l,k])=>{b.append(el('div','tm',n));
-    l.slice(0,5).forEach(x=>{const r=el('div','r');r.append(el('b','',x.t+(x.j?' ↻':'')),el('span','',(k=='b'?'→ ':'← ')+x[k]+' · '+x.nm));b.append(r)})});
-  b.append(el('p','sm','Rozkład bez opóźnień. ↻ = jutro.'));
-  const a=el('a');a.href='https://portalpasazera.pl/';a.target='_blank';a.rel='noopener';a.textContent='Opóźnienia: Portal Pasażera →';a.style.cssText='color:var(--y);font-size:13px';b.append(a);
+  if(!j.dep||!j.dep.length){b.textContent='Brak odjazdów'+(j.err?' ('+j.err+')':'')+'.';return}
+  $('pkp').textContent=j.live?'NA ŻYWO':'WG ROZKŁADU';
+  j.dep.slice(0,10).forEach(x=>{const r=el('div','r'),t=el('b','',x.t?hmz(x.t):x.hm);
+    if(x.cx)t.style.textDecoration='line-through';else if(x.d>=5)t.style.color='var(--r)';else if(x.d>0)t.style.color='var(--y)';
+    const w=el('span');w.append(el('div','',x.n+' → '+x.to));
+    let s=(x.pl?'peron '+x.pl+(x.tr?' · tor '+x.tr:''):'');
+    if(x.cx)s+=' · ODWOŁANY';else if(x.d>0)s+=' · +'+x.d+' min (rozkł. '+hmz(x.p)+')';else if(x.d===0)s+=' · planowo';
+    if(s)w.append(el('small','sm',s));r.append(t,w);b.append(r)});
+  if(!j.live)b.append(el('p','sm','Rozkład bez opóźnień'+(j.err?' ('+j.err+')':'')+'.'));
 }).catch(()=>$('pk').textContent='Rozkład niedostępny');
 fetch('/api/apps').then(r=>r.json()).then(j=>{const g=j.gym,b=$('gy');b.textContent='';
   if(g.err){b.append(el('p','sm',g.err=='401'?'Aplikacja wymaga PIN-u: dodaj zmienną GYM_PIN w Vercelu.':'Brak danych z aplikacji.'))}

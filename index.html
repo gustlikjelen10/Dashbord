@@ -122,6 +122,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 .pl2{display:flex;gap:8px;height:100%;align-items:stretch}#map{flex:0 0 58%;min-height:170px;border:1px solid var(--bd);background:#0a0d10}#pl{flex:1;min-width:0;overflow:auto;max-height:100%}
 .leaflet-container{font:inherit}.leaflet-control-attribution{font-size:8px}.pm svg{display:block}.pt{position:absolute;left:14px;top:1px;font:700 9px var(--mono);color:#fff;text-shadow:0 0 3px #000,0 0 3px #000;white-space:nowrap}
 .mx{white-space:normal;overflow:visible;text-overflow:clip}.dz .b{font-size:11px}#dailyVersesWrapper{max-height:none;overflow:visible}.cdg{flex-wrap:wrap}.dz h3{margin:8px 0 3px}
+.bsr{display:flex;gap:8px;align-items:center;padding:3px 0;border-bottom:1px solid var(--bd);font-size:11px}.bsr b{min-width:22px;text-align:center;color:var(--y);border:1px solid var(--bd);font-size:11px}.bsr span{flex:1;min-width:0}.bsr i{font-style:normal;font-weight:700;white-space:nowrap}.bsr i.soon{color:var(--r)}.bsr.cx{text-decoration:line-through;opacity:.6}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -139,7 +140,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 <section class="p"><header><h2>Bieg dnia</h2></header><div class="b"><div class="sun" id="sun"></div><div id="aq"></div><div id="al"></div></div></section>
 <section class="p"><header><h2>Kalendarz</h2></header><div class="b"><div id="cal">Ładuję…</div></div></section>
 <section class="p"><header><h2>Dziś w historii</h2></header><div class="b hs"><div id="hs">Ładuję…</div></div></section>
-<section class="p bus"><header><h2>Autobus</h2><em class="pill">KOSTROMSKA – BELZACKA</em></header><div class="b lnk"><svg viewBox="0 0 240 70" aria-hidden="true"><rect x="10" y="8" width="200" height="44" fill="#e8eaed"/><rect x="20" y="16" width="30" height="18" fill="#4d7cff"/><rect x="58" y="16" width="30" height="18" fill="#4d7cff"/><rect x="96" y="16" width="30" height="18" fill="#4d7cff"/><rect x="134" y="16" width="30" height="18" fill="#4d7cff"/><rect x="172" y="12" width="30" height="40" fill="#ffc933"/><circle cx="52" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><circle cx="168" cy="54" r="10" fill="#0a0d10" stroke="#e8eaed" stroke-width="3"/><rect x="10" y="40" width="160" height="4" fill="#ff5a4d"/></svg><a href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">Odjazdy na żywo →</a><a href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład MZK →</a></div></section>
+<section class="p bus"><header><h2>Autobus</h2><em class="pill" id="bsn">KOSTROMSKA – BELZACKA</em></header><div class="b"><div id="bs">Ładuję…</div><div class="sm" id="bsu"></div><a class="sm" style="color:var(--y)" href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">kiedyprzyjedzie.pl →</a> <a class="sm" style="color:var(--y)" href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład MZK →</a></div></section>
 <section class="p"><header><h2>PKP · Piotrków</h2><em class="pill">WG ROZKŁADU</em></header><div class="b"><div id="pk">Ładuję…</div></div></section>
 <section class="p mt"><header><h2>Mecze</h2></header><div class="b"><div class="tm">Dziś</div><div id="td2">Ładuję…</div><div class="tm">Ekstraklasa</div><div id="e1">Ładuję…</div><div class="tm">I liga</div><div id="e2">Ładuję…</div></div></section>
 <section class="p"><header><h2>Waluty i akcje</h2><em class="pill" id="mt"></em></header><div class="b" id="mk">Ładuję…</div></section>
@@ -314,6 +315,20 @@ rb.onclick=async()=>{
   if(!ra.paused||rb.textContent.startsWith('■')){rstop();return}
   if(!rc){$('rs').textContent='łączę…';let x=[];try{x=(await (await fetch('/api/radio')).json()).urls}catch(e){}rc=[HLS,...x]}
   tryRadio(0)};
+const bsRender=j=>{const b=$('bs');b.textContent='';
+  if(!j.rows||!j.rows.length){b.textContent='Brak odjazdów.';return}
+  if(j.station_name)$('bsn').textContent=j.station_name.toUpperCase();
+  j.rows.slice(0,12).forEach(x=>{const r=el('div','bsr'+(x.canceled?' cx':'')),t=el('i',/^\d+ min$/.test(x.time)&&parseInt(x.time)<=5?'soon':'',x.canceled?'odwołany':x.time);
+    const dl=Math.round((x.time_diff||0)/60);const s=el('span','',(j.directions&&j.directions[x.direction_id])||'');
+    if(dl)s.append(el('small','sm',' '+(dl>0?'+':'')+dl+' min'));if(x.is_estimated===false)s.append(el('small','sm',' rozkład'));
+    r.append(el('b','',x.line_name),s,t);b.append(r)});
+  $('bsu').textContent=j.timestamp?'stan '+new Date(j.timestamp*1000).toLocaleTimeString('pl-PL'):''};
+async function bus(){let j=null;
+  try{const r=await fetch('https://piotrkow.kiedyprzyjedzie.pl/api/departures/899484:952553');if(r.ok)j=await r.json()}catch(e){}
+  if(!j||!j.rows){try{j=await (await fetch('/api/bus')).json()}catch(e){}}
+  if(!j||!j.rows||!j.rows.length&&j.err){$('bs').textContent='Brak danych na żywo'+(j&&j.err?' ('+j.err+')':'')+'.';return}
+  bsRender(j)}
+bus();setInterval(bus,20000);
 const CC={pilka:'#2ecc71',kraj:'#4d7cff',kultura:'#ffc933',okazje:'#ff5a4d'};
 let items=[],seen=0,off=new Set(),failed=[];
 try{seen=+localStorage.getItem('seen')||0;off=new Set(JSON.parse(localStorage.getItem('off')||'[]'))}catch(e){}

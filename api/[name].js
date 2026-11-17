@@ -1,5 +1,6 @@
 const H = {
   apps: require('../lib/apps.js'),
+  bus: require('../lib/bus.js'),
   calendar: require('../lib/calendar.js'),
   imieniny: require('../lib/imieniny.js'),
   koszulka: require('../lib/koszulka.js'),

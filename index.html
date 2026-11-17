@@ -84,10 +84,11 @@ html,body{height:100%}body{display:flex;flex-direction:column}
  body{height:100vh;overflow:hidden}
  .strip{grid-template-columns:1fr 1.3fr auto}
  .grid{grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
- .news{grid-column:1/3;grid-row:1/3}
+ .news{grid-column:1/3;grid-row:1}.live{grid-column:1/3;grid-row:2}
  .p>.b,.p>.tp,.nl{max-height:none}
 }
 .r{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:14px}.r b{font:700 12px var(--mono);color:var(--y);min-width:74px}.r.lv b{color:var(--r)}.tm{font:700 11px var(--mono);letter-spacing:.1em;color:var(--g);margin:10px 0 2px;text-transform:uppercase}.tm:first-child{margin-top:0}
+.r small{display:block}.lpb{position:absolute;inset:0;width:100%;background:#0a0d10;color:var(--y);font:700 15px var(--mono);border:0;cursor:pointer}.live .tp.fr.on{min-height:200px}
 </style>
 </head>
 <body>
@@ -99,6 +100,7 @@ html,body{height:100%}body{display:flex;flex-direction:column}
 </div>
 <div class="grid">
 <section class="p news"><header><h2>Wiadomości</h2><em class="pill" id="nc"></em></header><div class="b"><div class="tiles" id="tl"></div><div class="nl" id="nw">Ładuję…</div></div></section>
+<section class="p live"><header><h2>Na żywo</h2><div class="tabs" id="lt"></div><a class="pill" id="ly" style="text-decoration:none" href="https://www.youtube.com" target="_blank" rel="noopener">YT →</a></header><div class="b tp on fr" id="lv"></div></section>
 <section class="p"><header><h2>Pogoda</h2><nav class="tabs"><button class="on" data-t="w1">Teraz</button><button data-t="w2">Radar</button><button data-t="w3">Niebo</button></nav></header>
 <div class="b tp on" id="w1"><div id="wx">Ładuję…</div></div>
 <div class="b tp fr" id="w2"><iframe title="Radar Windy" loading="lazy" src="https://embed.windy.com/embed2.html?lat=51.405&lon=19.703&detailLat=51.405&detailLon=19.703&zoom=7&level=surface&overlay=radar&product=radar&menu=&message=&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"></iframe></div>
@@ -111,7 +113,8 @@ html,body{height:100%}body{display:flex;flex-direction:column}
 <div class="b tp" id="t3"><span class="pill" id="plc">…</span><svg viewBox="0 0 200 200" style="width:100%;max-width:240px;display:block;margin:0 auto 8px;color:var(--mu)"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="100" cy="100" r="30"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="90"/><path d="M100 8v184M8 100h184"/></g><circle cx="100" cy="100" r="3" fill="#ffc933"/><g id="pg"></g></svg><div id="pl">Ładuję…</div></div></section>
 <section class="p ap"><header><h2>Moje apki</h2><div class="tabs"><a class="pill" style="text-decoration:none" href="https://silownia-v1.vercel.app" target="_blank" rel="noopener">SIŁOWNIA →</a><a class="pill" style="text-decoration:none" href="https://piwko-eight.vercel.app" target="_blank" rel="noopener">PIWKO →</a></div></header>
 <div class="b"><h3 style="margin-top:0">Siłownia</h3><div id="gy">Ładuję…</div><h3>Piwko · ranking</h3><div id="bw">Ładuję…</div></div></section>
-<section class="p mt"><header><h2>Mecze · dziś na świecie</h2></header><div class="b" id="td2">Ładuję…</div></section>
+<section class="p mt"><header><h2>Mecze</h2><nav class="tabs"><button class="on" data-t="g1">Dziś</button><button data-t="g2">Ekstraklasa</button><button data-t="g3">I liga</button></nav></header>
+<div class="b tp on" id="g1"><div id="td2">Ładuję…</div></div><div class="b tp" id="g2"><div id="e1">Ładuję…</div></div><div class="b tp" id="g3"><div id="e2">Ładuję…</div></div></section>
 <section class="p"><header><h2>Waluty i akcje</h2><em class="pill" id="mt"></em></header><div class="b" id="mk">Ładuję…</div></section>
 <section class="p"><header><h2>Media</h2><nav class="tabs"><button class="on" data-t="m1">YouTube</button><button data-t="m2">Kamera</button><button data-t="m3">Koszulka</button></nav></header>
 <div class="b tp on" id="m1"><div class="yt" id="yt">Ładuję…</div></div>
@@ -209,10 +212,10 @@ function cd(){const b=$('cd');b.textContent='';const n=new Date(),y=n.getFullYea
   T.forEach(([l,t])=>{if(t<n)t=new Date(t.getFullYear()+1,t.getMonth(),t.getDate(),t.getHours(),t.getMinutes());
     const d=Math.ceil((t-n)/864e5);if(d<0)return;const x=el('div');x.append(el('b','',d===0?'dziś':String(d)),el('span','',(d===0?'':d===1?'dzień ':'dni ')+l));b.append(x)})}
 cd();
-fetch('/api/today').then(r=>r.json()).then(j=>{const b=$('td2');b.textContent='';
-  if(j.off){b.textContent='Wymaga klucza APIFOOTBALL_KEY.';return}
-  if(!j.m.length)b.append(el('p','sm','Brak meczów z wybranych lig.'));j.m.forEach(m=>b.append(mr(m)));
-  if(j.err)b.append(el('p','err',j.err))}).catch(()=>$('td2').textContent='Niedostępne');
+const hl=(r,m)=>{if(/legia|lks|łks|poland|polska/i.test(m.h+' '+m.a))r.style.color='var(--y)';return r};
+function ml(url,id,empty){fetch(url).then(r=>r.json()).then(j=>{const b=$(id);b.textContent='';
+  if(!j.m.length)b.append(el('p','sm',empty));j.m.forEach(m=>b.append(hl(mr(m),m)));if(j.err)b.append(el('p','err',j.err))}).catch(()=>$(id).textContent='Niedostępne')}
+ml('/api/today','td2','Brak meczów z wybranych lig.');ml('/api/today?l=pol.1','e1','Brak zaplanowanych meczów.');ml('/api/today?l=pol.2','e2','Brak danych dla I ligi.');
 fetch('/api/trains').then(r=>r.json()).then(j=>{const b=$('pk');b.textContent='';
   if(!j.dep.length&&!j.arr.length){b.textContent='Nie udało się pobrać rozkładu.';return}
   [['Odjazdy',j.dep,'b'],['Przyjazdy',j.arr,'a']].forEach(([n,l,k])=>{b.append(el('div','tm',n));
@@ -245,9 +248,17 @@ function planes(){fetch('/api/planes').then(r=>r.json()).then(j=>{const b=$('pl'
   if(!j.p.length)b.append(el('p','sm','Teraz nic nie leci w promieniu 55 km.'));
   j.p.forEach(a=>{const dx=(a.lo-19.703)*111.32*Math.cos(51.405*Math.PI/180),dy=(a.la-51.405)*110.57,x=100+dx/55.6*90,y=100-dy/55.6*90;
     if(x>=0&&x<=200&&y>=0&&y<=200)g.insertAdjacentHTML('beforeend','<polygon points="0,-6 4,5 0,3 -4,5" fill="#4d7cff" stroke="#e8eaed" stroke-width="1" transform="translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+Math.round(a.tr)+')"/>');
-    const r=el('div','r');r.append(el('b','',a.f),el('span','',(a.t?a.t+' · ':'')+a.alt+' m · '+a.gs+' km/h · '+a.d+' km'));b.append(r)})}).catch(()=>{$('plc').textContent='BŁĄD'})}
+    const r=el('div','r'),w=el('span');if(a.o)w.append(el('div','',a.o+' → '+a.dd+(a.dc?' · '+a.dc:'')));w.append(el('small','sm',(a.al?a.al+' · ':'')+(a.t?a.t+' · ':'')+a.alt+' m · '+a.gs+' km/h · '+a.d+' km'));r.append(el('b','',a.f),w);b.append(r)})}).catch(()=>{$('plc').textContent='BŁĄD'})}
 planes();setInterval(planes,30000);
 document.querySelectorAll('nav.tabs').forEach(n=>n.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=n.closest('section');n.querySelectorAll('button').forEach(x=>x.className=x===b?'on':'');p.querySelectorAll('.tp').forEach(t=>t.classList.toggle('on',t.id===b.dataset.t))}));
+const LIVE=[['Republika','telewizja_republika']];
+function lvSel(i){[...$('lt').children].forEach((b,k)=>b.className=k===i?'on':'');const q=LIVE[i][1];$('ly').href=/^UC/.test(q)?'https://www.youtube.com/channel/'+q+'/live':'https://www.youtube.com/@'+q+'/live';
+  $('lv').innerHTML='';const p=el('button','lpb','▶ Włącz: '+LIVE[i][0]);p.onclick=()=>play(i,p);$('lv').append(p)}
+async function play(i,p){p.textContent='Łączę…';let id=LIVE[i][1];
+  if(!/^UC/.test(id)){try{id=(await (await fetch('/api/live?h='+id)).json()).id}catch(e){id=''}}
+  if(!id){p.textContent='Nie znaleziono kanału. Otwórz na YouTube →';p.onclick=()=>window.open($('ly').href,'_blank');return}
+  const f=document.createElement('iframe');f.src='https://www.youtube.com/embed/live_stream?channel='+id+'&autoplay=1&mute=1';f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;$('lv').innerHTML='';$('lv').append(f)}
+LIVE.forEach(([n],i)=>{const b=el('button','',n);b.onclick=()=>lvSel(i);$('lt').append(b)});lvSel(0);
 const CC={pilka:'#2ecc71',kraj:'#4d7cff',kultura:'#ffc933',okazje:'#ff5a4d'};
 let items=[],seen=0,off=new Set(),failed=[];
 try{seen=+localStorage.getItem('seen')||0;off=new Set(JSON.parse(localStorage.getItem('off')||'[]'))}catch(e){}

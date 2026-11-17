@@ -115,11 +115,15 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 @media(min-width:1400px) and (min-height:560px){
  body{height:100vh;overflow:hidden}
  .strip{grid-template-columns:1.2fr 1.6fr auto}
- .grid{grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));align-content:stretch;grid-auto-flow:dense}
- .news{grid-column:1/4;grid-row:1/3}.live{grid-column:1/4;grid-row:3}.w2{grid-column:span 2}
+ .grid{grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));align-content:stretch;grid-auto-flow:dense}
+ .grid>.p{grid-row:span 2}.grid>.news{grid-column:1/4;grid-row:1/4}.grid>.live{grid-column:1/4;grid-row:4/7}.w2{grid-column:span 2}
  .p>.b,.p>.tp,.nl{max-height:none}
 }
+.pl2{display:flex;gap:8px;height:100%;align-items:stretch}#map{flex:0 0 58%;min-height:170px;border:1px solid var(--bd);background:#0a0d10}#pl{flex:1;min-width:0;overflow:auto;max-height:100%}
+.leaflet-container{font:inherit}.leaflet-control-attribution{font-size:8px}.pm svg{display:block}.pt{position:absolute;left:14px;top:1px;font:700 9px var(--mono);color:#fff;text-shadow:0 0 3px #000,0 0 3px #000;white-space:nowrap}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
 <div class="top"><span class="logo">PULPIT</span><span class="pill">NA ŻYWO</span><span class="dt"><span id="dt"></span><small id="im"></small></span><span class="rad"><button class="btn" id="rb">▶ POLSKIE RADIO 24</button><input type="range" id="rv" min="0" max="1" step="0.05" value="0.6" title="Głośność"><span class="sm" id="rs"></span><audio id="ra" preload="none"></audio></span><span class="clk" id="ck"></span></div>
@@ -144,7 +148,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 <section class="p mt"><header><h2>Ligi · najbliższe</h2></header><div class="b"><div class="tm">Ekstraklasa</div><div id="e1">Ładuję…</div><div class="tm">I liga</div><div id="e2">Ładuję…</div></div></section>
 <section class="p"><header><h2>Waluty i akcje</h2><em class="pill" id="mt"></em></header><div class="b" id="mk">Ładuję…</div></section>
 <section class="p ap"><header><h2>Moje apki</h2><div class="tabs"><a class="pill" style="text-decoration:none" href="https://silownia-v1.vercel.app" target="_blank" rel="noopener">SIŁ. →</a><a class="pill" style="text-decoration:none" href="https://piwko-eight.vercel.app" target="_blank" rel="noopener">PIWKO →</a></div></header><div class="b"><h3 style="margin-top:0">Siłownia</h3><div id="gy">Ładuję…</div><h3>Piwko · ranking</h3><div id="bw">Ładuję…</div></div></section>
-<section class="p w2"><header><h2>Samoloty nad Piotrkowem</h2><em class="pill" id="plc">…</em></header><div class="b"><div class="pl2"><svg viewBox="0 0 200 200" style="width:100%;max-width:240px;display:block;margin:0 auto 8px;color:var(--mu)"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="100" cy="100" r="30"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="90"/><path d="M100 8v184M8 100h184"/></g><circle cx="100" cy="100" r="3" fill="#ffc933"/><g id="pg"></g></svg><div id="pl">Ładuję…</div></div></div></section>
+<section class="p w2"><header><h2>Samoloty nad Piotrkowem</h2><em class="pill" id="plc">…</em></header><div class="b"><div class="pl2"><div id="map"></div><div id="pl">Ładuję…</div></div></div></section>
 <section class="p w2"><header><h2>YouTube · nowości</h2></header><div class="b"><div class="yt" id="yt">Ładuję…</div></div></section>
 <section class="p jr"><header><h2>Koszulka</h2><a class="pill" style="text-decoration:none" href="https://koszulki-kolekcja.vercel.app/" target="_blank" rel="noopener">KATALOG →</a></header><div class="b"><div id="js">Ładuję…</div></div></section>
 </div>
@@ -240,7 +244,7 @@ cd();
 const hl=(r,m)=>{if(/legia|lks|łks|poland|polska/i.test(m.h+' '+m.a))r.style.color='var(--y)';return r};
 function ml(url,id,empty){fetch(url).then(r=>r.json()).then(j=>{const b=$(id);b.textContent='';
   if(!j.m.length)b.append(el('p','sm',empty));j.m.forEach(m=>b.append(hl(mr(m),m)));if(j.err)b.append(el('p','err',j.err))}).catch(()=>$(id).textContent='Niedostępne')}
-ml('/api/today','td2','Brak meczów z wybranych lig.');ml('/api/today?l=pol.1','e1','Brak zaplanowanych meczów.');ml('/api/today?l=pol.2','e2','Brak danych dla I ligi.');
+ml('/api/today','td2','Brak meczów z wybranych lig.');ml('/api/today?l=tsdb:4422','e1','Brak zaplanowanych meczów.');ml('/api/today?l=tsdb:4661','e2','Brak danych dla I ligi.');
 fetch('/api/trains').then(r=>r.json()).then(j=>{const b=$('pk');b.textContent='';
   if(!j.dep.length&&!j.arr.length){b.textContent='Nie udało się pobrać rozkładu.';return}
   [['Odjazdy',j.dep,'b'],['Przyjazdy',j.arr,'a']].forEach(([n,l,k])=>{b.append(el('div','tm',n));
@@ -267,12 +271,17 @@ fetch('/api/koszulka').then(r=>r.json()).then(r=>{const b=$('js');b.textContent=
   const j=r.j;b.className='b js';
   if(j.img){const m=el('img');m.src=j.img;m.alt='';m.loading='lazy';m.onerror=()=>m.remove();b.append(m)}
   b.append(el('b','',j.club+(j.season?' · '+j.season:'')),el('p','sm',[j.type,j.manufacturer,j.league,j.country].filter(Boolean).join(' · ')+' · w kolekcji: '+r.n))}).catch(()=>$('js').textContent='Katalog niedostępny');
-function planes(){fetch('/api/planes').then(r=>r.json()).then(j=>{const b=$('pl'),g=$('pg');b.textContent='';g.innerHTML='';
+let map,pls;
+function initMap(){if(map||!window.L)return;map=L.map('map',{zoomControl:false}).setView([51.405,19.703],8);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:12,attribution:'Tiles © Esri'}).addTo(map);
+  L.circleMarker([51.405,19.703],{radius:5,color:'#fff',weight:2,fillColor:'#ffc933',fillOpacity:1}).addTo(map).bindTooltip('Piotrków');
+  pls=L.layerGroup().addTo(map);window.addEventListener('resize',()=>map.invalidateSize());setTimeout(()=>map.invalidateSize(),300)}
+function planes(){initMap();fetch('/api/planes').then(r=>r.json()).then(j=>{const b=$('pl');b.textContent='';if(pls)pls.clearLayers();
   if(j.err){$('plc').textContent='BŁĄD';b.textContent='Brak danych o ruchu lotniczym.';return}
   $('plc').textContent=j.p.length+' w zasięgu';
   if(!j.p.length)b.append(el('p','sm','Teraz nic nie leci w promieniu 55 km.'));
-  j.p.forEach(a=>{const dx=(a.lo-19.703)*111.32*Math.cos(51.405*Math.PI/180),dy=(a.la-51.405)*110.57,x=100+dx/55.6*90,y=100-dy/55.6*90;
-    if(x>=0&&x<=200&&y>=0&&y<=200)g.insertAdjacentHTML('beforeend','<polygon points="0,-6 4,5 0,3 -4,5" fill="#4d7cff" stroke="#e8eaed" stroke-width="1" transform="translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+Math.round(a.tr)+')"/>');
+  j.p.forEach(a=>{
+    if(pls)L.marker([a.la,a.lo],{icon:L.divIcon({className:'pm',iconSize:[16,16],iconAnchor:[8,8],html:'<svg width="16" height="16" viewBox="-8 -8 16 16" style="transform:rotate('+Math.round(a.tr)+'deg)"><polygon points="0,-7 5,7 0,4 -5,7" fill="#4d7cff" stroke="#fff" stroke-width="1"/></svg><span class="pt">'+String(a.f).replace(/[^\w-]/g,'')+'</span>'})}).addTo(pls);
     const r=el('div','r'),w=el('span');if(a.o)w.append(el('div','',a.o+' → '+a.dd+(a.dc?' · '+a.dc:'')));w.append(el('small','sm',(a.al?a.al+' · ':'')+(a.t?a.t+' · ':'')+a.alt+' m · '+a.gs+' km/h · '+a.d+' km'));r.append(el('b','',a.f),w);b.append(r)})}).catch(()=>{$('plc').textContent='BŁĄD'})}
 planes();setInterval(planes,30000);
 document.querySelectorAll('nav.tabs').forEach(n=>n.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=n.closest('section');n.querySelectorAll('button').forEach(x=>x.className=x===b?'on':'');p.querySelectorAll('.tp').forEach(t=>t.classList.toggle('on',t.id===b.dataset.t))}));
@@ -288,14 +297,27 @@ async function play(i,p){p.textContent='Łączę…';let j={};
   $('lv').innerHTML='<div id="yp"></div>';
   new YT.Player('yp',{width:'100%',height:'100%',videoId:j.vid,playerVars:{autoplay:1,mute:1,playsinline:1},events:{onError:e=>bad(el('button','lpb'),[101,150].includes(e.data)?'Nadawca zablokował osadzanie.':'Błąd odtwarzania ('+e.data+').')}})}
 LIVE.forEach(([n],i)=>{const b=el('button','',n);b.onclick=()=>lvSel(i);$('lt').append(b)});lvSel(0);
-const ra=$('ra'),rb=$('rb');ra.volume=.6;$('rv').oninput=e=>ra.volume=+e.target.value;
-let rurls=null,ri=0;
+const ra=$('ra'),rb=$('rb'),HLS='https://stream15.polskieradio.pl/pr24/pr24.sdp/playlist.m3u8';ra.volume=.6;$('rv').oninput=e=>ra.volume=+e.target.value;
+let rc=null,rh=null;
+const loadHls=()=>window.Hls?Promise.resolve():new Promise((r,j)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js';s.onload=r;s.onerror=j;document.head.append(s)});
+const rstop=()=>{ra.pause();if(rh){rh.destroy();rh=null}rb.textContent='▶ POLSKIE RADIO 24';$('rs').textContent=''};
+async function tryRadio(i){
+  if(i>=rc.length){rstop();$('rs').textContent='brak działającego strumienia';window.open('https://polskieradio24.pl/','_blank');return}
+  const u=rc[i];$('rs').textContent='łączę ('+(i+1)+'/'+rc.length+')…';if(rh){rh.destroy();rh=null}
+  let done=false;const next=()=>{if(done)return;done=true;clearTimeout(t);ra.pause();tryRadio(i+1)};
+  const t=setTimeout(next,8000);
+  ra.onplaying=()=>{if(done)return;done=true;clearTimeout(t);rb.textContent='■ PR24';$('rs').textContent='gra'};
+  ra.onerror=next;
+  if(/\.m3u8/.test(u)&&!ra.canPlayType('application/vnd.apple.mpegurl')){
+    try{await loadHls()}catch(e){return next()}
+    if(!Hls.isSupported())return next();
+    rh=new Hls();rh.on(Hls.Events.ERROR,(e,d)=>{if(d.fatal)next()});rh.loadSource(u);rh.attachMedia(ra)
+  }else ra.src=u;
+  ra.play().catch(()=>{})}
 rb.onclick=async()=>{
-  if(!ra.paused){ra.pause();rb.textContent='▶ POLSKIE RADIO 24';$('rs').textContent='';return}
-  if(!rurls){$('rs').textContent='łączę…';try{rurls=(await (await fetch('/api/radio')).json()).urls}catch(e){rurls=[]}}
-  if(!rurls.length){$('rs').textContent='brak strumienia';window.open('https://polskieradio24.pl/','_blank');return}
-  ra.src=rurls[ri%rurls.length];try{await ra.play();rb.textContent='■ PR24';$('rs').textContent='gra'}catch(e){ri++;$('rs').textContent='błąd, kliknij ponownie'}};
-ra.onerror=()=>{ri++;$('rs').textContent='błąd strumienia';rb.textContent='▶ POLSKIE RADIO 24'};
+  if(!ra.paused||rb.textContent.startsWith('■')){rstop();return}
+  if(!rc){$('rs').textContent='łączę…';let x=[];try{x=(await (await fetch('/api/radio')).json()).urls}catch(e){}rc=[HLS,...x]}
+  tryRadio(0)};
 const CC={pilka:'#2ecc71',kraj:'#4d7cff',kultura:'#ffc933',okazje:'#ff5a4d'};
 let items=[],seen=0,off=new Set(),failed=[];
 try{seen=+localStorage.getItem('seen')||0;off=new Set(JSON.parse(localStorage.getItem('off')||'[]'))}catch(e){}

@@ -243,7 +243,7 @@ function ml(url,id,empty){fetch(url).then(r=>r.json()).then(j=>{const b=$(id);b.
   if(!j.m.length)b.append(el('p','sm',empty));j.m.forEach(m=>b.append(hl(mr(m),m)));if(j.err)b.append(el('p','err',j.err))}).catch(()=>$(id).textContent='Niedostępne')}
 ml('/api/today','td2','Brak meczów z wybranych lig.');ml('/api/today?l=tsdb:4422','e1','Brak zaplanowanych meczów.');ml('/api/today?l=tsdb:4661','e2','Brak danych dla I ligi.');
 const hmz=t=>new Date(t).toLocaleTimeString('pl-PL',{timeZone:'Europe/Warsaw',hour:'2-digit',minute:'2-digit'});
-fetch('/api/trains').then(r=>r.json()).then(j=>{const b=$('pk');b.textContent='';
+function pkRender(j){const b=$('pk');b.textContent='';
   if(!j.dep||!j.dep.length){b.textContent='Brak odjazdów'+(j.err?' ('+j.err+')':'')+'.';return}
   $('pkp').textContent=j.live?'NA ŻYWO':'WG ROZKŁADU';
   j.dep.slice(0,10).forEach(x=>{const r=el('div','r'),t=el('b','',x.t?hmz(x.t):x.hm);
@@ -252,8 +252,16 @@ fetch('/api/trains').then(r=>r.json()).then(j=>{const b=$('pk');b.textContent=''
     let s=(x.pl?'peron '+x.pl+(x.tr?' · tor '+x.tr:''):'');
     if(x.cx)s+=' · ODWOŁANY';else if(x.d>0)s+=' · +'+x.d+' min (rozkł. '+hmz(x.p)+')';else if(x.d===0)s+=' · planowo';
     if(s)w.append(el('small','sm',s));r.append(t,w);b.append(r)});
-  if(!j.live)b.append(el('p','sm','Rozkład bez opóźnień'+(j.err?' ('+j.err+')':'')+'.'));
-}).catch(()=>$('pk').textContent='Rozkład niedostępny');
+  if(!j.live)b.append(el('p','sm','Rozkład bez opóźnień i bez ŁKA/Polregio'+(j.err?' ('+j.err+')':'')+'.'))}
+async function klDirect(){const dd=o=>new Date(Date.now()+o*864e5).toLocaleDateString('sv-SE',{timeZone:'Europe/Warsaw'});
+  const get=async d=>{const r=await fetch('https://kolej.live/api/?action=station&id=47704&date='+d);if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();
+    return j.board.filter(x=>x.kind==='departure').map(x=>({t:x.actualTime||x.plannedTime,p:x.plannedTime,d:x.delayMinutes,n:x.label,to:x.destination,pl:x.platform,tr:x.track,cx:!!x.isCancelled}))};
+  let l=(await get(dd(0))).filter(x=>Date.parse(x.t)>=Date.now()-6e4);if(l.length<6){try{l=l.concat(await get(dd(1)))}catch(e){}}
+  return l.sort((a,b)=>Date.parse(a.t)-Date.parse(b.t)).slice(0,12)}
+async function pk(){let j;try{j=await (await fetch('/api/trains')).json()}catch(e){j={dep:[]}}
+  if(!j.live){try{const d=await klDirect();if(d.length)j={live:true,dep:d}}catch(e){j.err=(j.err||'')+' / przeglądarka: '+e.message}}
+  pkRender(j)}
+pk();setInterval(pk,60000);
 fetch('/api/apps').then(r=>r.json()).then(j=>{const g=j.gym,b=$('gy');b.textContent='';
   if(g.err){b.append(el('p','sm',g.err=='401'?'Aplikacja wymaga PIN-u: dodaj zmienną GYM_PIN w Vercelu.':'Brak danych z aplikacji.'))}
   else{const d=el('div');d.append(el('span','sm','Następny trening'));b.append(d,el('div','big',g.next));
@@ -294,7 +302,7 @@ const bad=(p,t)=>{p.textContent=t+' Otwórz na YouTube →';p.onclick=()=>window
 async function play(i,p){p.textContent='Łączę…';let j={};
   try{j=await (await fetch('/api/live?h='+LIVE[i][1])).json()}catch(e){}
   if(!j.id&&!j.vid)return bad(p,'Nie znaleziono transmisji.');
-  if(!j.vid){const f=document.createElement('iframe');f.src='https://www.youtube.com/embed/live_stream?channel='+j.id+'&autoplay=1&mute=1';f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;$('lv').innerHTML='';$('lv').append(f);return}
+  if(!j.vid)return bad(p,'Nie znaleziono transmisji na żywo.');
   if(!window.YT){await new Promise(r=>{window.onYouTubeIframeAPIReady=r;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.append(s)})}
   $('lv').innerHTML='<div id="yp"></div>';
   new YT.Player('yp',{width:'100%',height:'100%',videoId:j.vid,playerVars:{autoplay:1,mute:1,playsinline:1},events:{onError:e=>bad(el('button','lpb'),[101,150].includes(e.data)?'Nadawca zablokował osadzanie.':'Błąd odtwarzania ('+e.data+').')}})}

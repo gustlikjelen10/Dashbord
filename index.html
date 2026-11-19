@@ -225,7 +225,8 @@ fetch('/api/calendar').then(r=>r.json()).then(j=>{
 const pc=v=>'<span class="'+(v>=0?'up':'dn')+'">'+(v>=0?'▲ +':'▼ ')+v.toFixed(2).replace('.',',')+'%</span>';
 fetch('/api/market').then(r=>r.json()).then(j=>{
   let h='<h3 style="margin-top:0">Kursy NBP (PLN)</h3><table>'+j.fx.map(x=>'<tr><td><b>'+x.c+'</b></td><td>'+x.v.toFixed(4).replace('.',',')+'</td><td>'+pc(x.ch)+'</td></tr>').join('')+'</table>';
-  if(j.st.length){h+='<h3>Akcje i ETF</h3><table>'+j.st.map(x=>'<tr><td><b>'+x.k+'</b></td><td>'+x.p.toFixed(2).replace('.',',')+(x.cur&&x.cur!='PLN'?' '+x.cur:'')+'</td><td>'+pc(x.ch)+'</td></tr>').join('')+'</table>';
+  if(j.cm&&j.cm.length)h+='<h3>Surowce i krypto</h3><table>'+j.cm.map(x=>'<tr><td><b>'+x.k+'</b></td><td>'+x.v.toLocaleString('pl-PL',{maximumFractionDigits:x.v>1000?0:2})+' '+x.cur+'</td><td>'+pc(x.ch)+'</td></tr>').join('')+'</table>';
+  if(j.st.length){h+='<h3>Akcje i ETF</h3><table>'+j.st.map(x=>'<tr><td title="'+x.n+'"><b>'+x.k+'</b></td><td>'+x.p.toFixed(2).replace('.',',')+(x.cur&&x.cur!='PLN'?' '+x.cur:'')+'</td><td>'+pc(x.ch)+'</td></tr>').join('')+'</table>';
     const t=Math.max(...j.st.map(x=>x.t));if(t)$('mt').textContent='stan '+new Date(t).toLocaleString('pl-PL',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})}
   h+='<p class="sm" style="margin-top:8px">Notowania opóźnione, zmiana względem poprzedniej sesji.</p>';
   if(j.failed.length)h+='<p class="err">Bez danych: '+j.failed.join(', ')+'</p>';

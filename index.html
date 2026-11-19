@@ -260,6 +260,7 @@ const hl=(r,m)=>{if(/legia|lks|łks|poland|polska/i.test(m.h+' '+m.a))r.style.co
 function ml(url,id,empty){fetch(url).then(r=>r.json()).then(j=>{const b=$(id);b.textContent='';
   if(!j.m.length)b.append(el('p','sm',empty));j.m.forEach(m=>b.append(hl(mr(m),m)));if(j.err)b.append(el('p','err',j.err))}).catch(()=>$(id).textContent='Niedostępne')}
 ml('/api/today','td2','Brak meczów z wybranych lig.');
+const hmz=t=>new Date(t).toLocaleTimeString('pl-PL',{timeZone:'Europe/Warsaw',hour:'2-digit',minute:'2-digit'});
 function pkRender(j){const b=$('pk');b.textContent='';
   if(!j.dep||!j.dep.length){b.textContent='Brak odjazdów'+(j.err?' ('+j.err+')':'')+'.';return}
   $('pkp').textContent=j.live?'NA ŻYWO':'WG ROZKŁADU';

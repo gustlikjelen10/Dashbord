@@ -261,17 +261,19 @@ cd();
 const hl=(r,m)=>{if(/legia|lks|łks|poland|polska/i.test(m.h+' '+m.a))r.style.color='var(--y)';return r};
 function ml(url,id,empty){fetch(url).then(r=>r.json()).then(j=>{const b=$(id);b.textContent='';
   if(!j.m.length)b.append(el('p','sm',empty));j.m.forEach(m=>b.append(hl(mr(m),m)));if(j.err)b.append(el('p','err',j.err))}).catch(()=>$(id).textContent='Niedostępne')}
-const LGS=[['eng.1','PL','top'],['esp.1','LL','top'],['ger.1','BL','top'],['ita.1','SA','top'],['fra.1','L1','top'],['uefa.champions','LM','eu'],['uefa.europa','LE','eu'],['uefa.europa.conf','LK','eu'],['uefa.nations','LN','nat'],['fifa.friendly','TOW','nat']];
+const LGS=[['eng.1','PL','top','4328'],['esp.1','LL','top','4335'],['ger.1','BL','top','4331'],['ita.1','SA','top','4332'],['fra.1','L1','top','4334'],['uefa.champions','LM','eu'],['uefa.europa','LE','eu'],['uefa.europa.conf','LK','eu'],['uefa.nations','LN','nat'],['fifa.friendly','TOW','nat']];
 const TS=[['4422','Ekstraklasa'],['4661','I liga']];
 const ymd=d=>d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
-async function espn(slug){const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/'+slug+'/scoreboard?dates='+ymd(new Date())+'-'+ymd(new Date(Date.now()+2*864e5)));
-  if(!r.ok)throw new Error(slug+' '+r.status);const j=await r.json();
-  return (j.events||[]).map(e=>{const c=(e.competitions||[])[0];if(!c)return null;const h=c.competitors.find(x=>x.homeAway==='home'),a=c.competitors.find(x=>x.homeAway==='away');if(!h||!a)return null;const st=c.status.type.state;
+async function espn(slug){const days=[0,1,2].map(o=>ymd(new Date(Date.now()+o*864e5)));
+  const rs=await Promise.allSettled(days.map(async d=>{const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/'+slug+'/scoreboard?dates='+d);if(!r.ok)throw new Error(slug+' '+r.status);return (await r.json()).events||[]}));
+  const ok=rs.filter(x=>x.status==='fulfilled');if(!ok.length)throw rs[0].reason;
+  const seen=new Set(),ev=[];ok.forEach(x=>x.value.forEach(e=>{const k=e.id||e.uid;if(!seen.has(k)){seen.add(k);ev.push(e)}}));
+  return ev.map(e=>{const c=(e.competitions||[])[0];if(!c)return null;const h=c.competitors.find(x=>x.homeAway==='home'),a=c.competitors.find(x=>x.homeAway==='away');if(!h||!a)return null;const st=c.status.type.state;
     return{d:e.date,h:h.team.displayName,a:a.team.displayName,s:st==='in'?'LIVE':st==='post'?'FT':'NS',gh:st==='pre'?null:+h.score,ga:st==='pre'?null:+a.score}}).filter(Boolean)}
 async function tsdb(id){const r=await fetch('https://www.thesportsdb.com/api/v1/json/123/eventsnextleague.php?id='+id);if(!r.ok)throw new Error('tsdb '+id+' '+r.status);const j=await r.json();
   return (j.events||[]).map(e=>({d:e.strTimestamp?e.strTimestamp+'Z':e.dateEvent+'T'+(e.strTime||'00:00:00')+'Z',h:e.strHomeTeam,a:e.strAwayTeam,s:'NS',gh:null,ga:null}))}
 async function matches(){const b=$('td2');
-  const res=await Promise.allSettled([...LGS.map(([s,t,g])=>espn(s).then(m=>m.map(x=>({...x,t,g})))),...TS.map(([id,t])=>tsdb(id).then(m=>m.map(x=>({...x,t,g:'pl'}))))]);
+  const res=await Promise.allSettled([...LGS.map(([s,t,g,f])=>espn(s).catch(e=>f?tsdb(f):Promise.reject(e)).then(m=>m.map(x=>({...x,t,g})))),...TS.map(([id,t])=>tsdb(id).then(m=>m.map(x=>({...x,t,g:'pl'}))))]);
   const all=[],errs=[];res.forEach(r=>r.status==='fulfilled'?all.push(...r.value):errs.push(r.reason.message));
   const t0=new Date();t0.setHours(0,0,0,0);const t1=Date.now()+3*864e5,inw=x=>new Date(x.d)>=t0&&new Date(x.d)<t1;
   const srt=l=>l.sort((a,b)=>a.d.localeCompare(b.d));

@@ -131,6 +131,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 .mx{white-space:normal;overflow:visible;text-overflow:clip}.dz .b{font-size:11px}#dailyVersesWrapper{max-height:none;overflow:visible}.cdg{flex-wrap:wrap}.dz h3{margin:8px 0 3px}
 .bsr{display:flex;gap:8px;align-items:center;padding:3px 0;border-bottom:1px solid var(--bd);font-size:11px}.bsr b{min-width:22px;text-align:center;color:var(--y);border:1px solid var(--bd);font-size:11px}.bsr span{flex:1;min-width:0}.bsr i{font-style:normal;font-weight:700;white-space:nowrap}.bsr i.soon{color:var(--r)}.bsr.cx{text-decoration:line-through;opacity:.6}
 .live>header .tabs{flex-wrap:wrap}
+#jp{font-size:11px;line-height:1.3}#jp small{display:block;color:var(--y);font-size:10px;margin-top:2px}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -144,7 +145,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 </div>
 <div class="col R">
 <div class="row">
-<section class="p dz"><header><h2>Dzień</h2></header><div class="b"><h3 style="margin-top:0">Imieniny</h3><div id="im">…</div><h3>Odliczanie</h3><div class="cdg" id="cd"></div><h3>Maksyma</h3><div class="mx" id="mx"></div><h3>Werset</h3><div id="dailyVersesWrapper">Ładuję…</div></div></section>
+<section class="p dz"><header><h2>Dzień</h2></header><div class="b"><h3 style="margin-top:0">Imieniny</h3><div id="im">…</div><h3>Odliczanie</h3><div class="cdg" id="cd"></div><h3>Maksyma</h3><div class="mx" id="mx"></div><h3>Werset</h3><div id="dailyVersesWrapper">Ładuję…</div><h3>Jan Paweł II</h3><div id="jp"></div></div></section>
 <section class="p"><header><h2>Pogoda</h2><nav class="tabs"><button class="on" data-t="w1">Teraz</button><button data-t="w2">Radar</button><button data-t="w4">Kamera</button></nav></header>
 <div class="b tp on" id="w1"><div id="wx">Ładuję…</div></div>
 <div class="b tp fr" id="w2"><iframe title="Radar Windy" loading="lazy" src="https://embed.windy.com/embed2.html?lat=51.405&lon=19.703&detailLat=51.405&detailLon=19.703&zoom=7&level=surface&overlay=radar&product=radar&menu=&message=&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"></iframe></div>
@@ -156,7 +157,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 <div class="row">
 <section class="p bus"><header><h2>Autobus</h2><em class="pill" id="bsn">KOSTROMSKA – BELZACKA</em></header><div class="b"><div id="bs">Ładuję…</div><div class="sm" id="bsu"></div><a class="sm" style="color:var(--y)" href="https://piotrkow.kiedyprzyjedzie.pl/#/stops/899484:952553/departures" target="_blank" rel="noopener">kiedyprzyjedzie.pl →</a> <a class="sm" style="color:var(--y)" href="https://mzk.piotrkow.pl/rozklad/main.htm" target="_blank" rel="noopener">Rozkład MZK →</a></div></section>
 <section class="p"><header><h2>PKP · Piotrków</h2><em class="pill" id="pkp">…</em></header><div class="b"><div id="pk">Ładuję…</div></div></section>
-<section class="p mt"><header><h2>Mecze dziś</h2></header><div class="b"><div class="tm">Dziś</div><div id="td2">Ładuję…</div></div></section>
+<section class="p mt"><header><h2>Mecze</h2><a class="pill" style="text-decoration:none" href="https://www.flashscore.pl/" target="_blank" rel="noopener">FLASHSCORE →</a></header><div class="b"><div id="td2">Ładuję…</div></div></section>
 <section class="p"><header><h2>Waluty i akcje</h2><em class="pill" id="mt"></em></header><div class="b" id="mk">Ładuję…</div></section>
 <section class="p ap"><header><h2>Moje apki</h2><div class="tabs"><a class="pill" style="text-decoration:none" href="https://silownia-v1.vercel.app" target="_blank" rel="noopener">SIŁ. →</a><a class="pill" style="text-decoration:none" href="https://piwko-eight.vercel.app" target="_blank" rel="noopener">PIWKO →</a></div></header><div class="b"><h3 style="margin-top:0">Siłownia</h3><div id="gy">Ładuję…</div><h3>Piwko · ranking</h3><div id="bw">Ładuję…</div></div></section>
 </div>
@@ -260,7 +261,28 @@ cd();
 const hl=(r,m)=>{if(/legia|lks|łks|poland|polska/i.test(m.h+' '+m.a))r.style.color='var(--y)';return r};
 function ml(url,id,empty){fetch(url).then(r=>r.json()).then(j=>{const b=$(id);b.textContent='';
   if(!j.m.length)b.append(el('p','sm',empty));j.m.forEach(m=>b.append(hl(mr(m),m)));if(j.err)b.append(el('p','err',j.err))}).catch(()=>$(id).textContent='Niedostępne')}
-ml('/api/today','td2','Brak meczów z wybranych lig.');
+const LGS=[['eng.1','PL','top'],['esp.1','LL','top'],['ger.1','BL','top'],['ita.1','SA','top'],['fra.1','L1','top'],['uefa.champions','LM','eu'],['uefa.europa','LE','eu'],['uefa.europa.conf','LK','eu'],['uefa.nations','LN','nat'],['fifa.friendly','TOW','nat']];
+const TS=[['4422','Ekstraklasa'],['4661','I liga']];
+const ymd=d=>d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+async function espn(slug){const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/'+slug+'/scoreboard?dates='+ymd(new Date())+'-'+ymd(new Date(Date.now()+2*864e5)));
+  if(!r.ok)throw new Error(slug+' '+r.status);const j=await r.json();
+  return (j.events||[]).map(e=>{const c=(e.competitions||[])[0];if(!c)return null;const h=c.competitors.find(x=>x.homeAway==='home'),a=c.competitors.find(x=>x.homeAway==='away');if(!h||!a)return null;const st=c.status.type.state;
+    return{d:e.date,h:h.team.displayName,a:a.team.displayName,s:st==='in'?'LIVE':st==='post'?'FT':'NS',gh:st==='pre'?null:+h.score,ga:st==='pre'?null:+a.score}}).filter(Boolean)}
+async function tsdb(id){const r=await fetch('https://www.thesportsdb.com/api/v1/json/123/eventsnextleague.php?id='+id);if(!r.ok)throw new Error('tsdb '+id+' '+r.status);const j=await r.json();
+  return (j.events||[]).map(e=>({d:e.strTimestamp?e.strTimestamp+'Z':e.dateEvent+'T'+(e.strTime||'00:00:00')+'Z',h:e.strHomeTeam,a:e.strAwayTeam,s:'NS',gh:null,ga:null}))}
+async function matches(){const b=$('td2');
+  const res=await Promise.allSettled([...LGS.map(([s,t,g])=>espn(s).then(m=>m.map(x=>({...x,t,g})))),...TS.map(([id,t])=>tsdb(id).then(m=>m.map(x=>({...x,t,g:'pl'}))))]);
+  const all=[],errs=[];res.forEach(r=>r.status==='fulfilled'?all.push(...r.value):errs.push(r.reason.message));
+  const t0=new Date();t0.setHours(0,0,0,0);const t1=Date.now()+3*864e5,inw=x=>new Date(x.d)>=t0&&new Date(x.d)<t1;
+  const srt=l=>l.sort((a,b)=>a.d.localeCompare(b.d));
+  const pol=srt(all.filter(x=>x.g==='pl'||/poland/i.test(x.h+' '+x.a)).filter(x=>x.g==='pl'?new Date(x.d)>=Date.now()-36e5*3:inw(x))).slice(0,8);
+  const polSet=new Set(pol);
+  const secs=[['Polska',pol],['TOP-5',srt(all.filter(x=>x.g==='top'&&inw(x)))],['Puchary europejskie',srt(all.filter(x=>x.g==='eu'&&inw(x)))],['Reprezentacje',srt(all.filter(x=>x.g==='nat'&&inw(x)&&!polSet.has(x)))]];
+  b.textContent='';let n=0;
+  secs.forEach(([t,l])=>{if(!l.length)return;n+=l.length;b.append(el('div','tm',t));l.slice(0,12).forEach(m=>{const r=hl(mr(m),m);r.append(el('small','sm',m.t));b.append(r)})});
+  if(!n)b.append(el('p','sm','Brak meczów z wybranych lig w najbliższych 3 dniach.'));
+  if(errs.length)b.append(el('p','sm','Niedostępne: '+errs.slice(0,4).join(', ')+(errs.length>4?'…':'')))}
+matches();setInterval(matches,300000);
 const hmz=t=>new Date(t).toLocaleTimeString('pl-PL',{timeZone:'Europe/Warsaw',hour:'2-digit',minute:'2-digit'});
 function pkRender(j){const b=$('pk');b.textContent='';
   if(!j.dep||!j.dep.length){b.textContent='Brak odjazdów'+(j.err?' ('+j.err+')':'')+'.';return}
@@ -365,6 +387,8 @@ document.querySelectorAll('section.p>header').forEach(hd=>{const x=document.crea
   x.onclick=()=>{hd.parentElement.classList.add('gone');
     document.querySelectorAll('.row,.col').forEach(c=>{c.style.display=c.querySelector('.p:not(.gone)')?'':'none'});
     setTimeout(()=>{try{if(map)map.invalidateSize()}catch(e){}},50)};hd.append(x)});
+const JP=[['Nie lękajcie się! Otwórzcie na oścież drzwi Chrystusowi.','inauguracja pontyfikatu, 1978'],['Musicie od siebie wymagać, nawet gdyby inni od was nie wymagali.','Westerplatte, 1987'],['Niech zstąpi Duch Twój i odnowi oblicze ziemi. Tej ziemi.','Warszawa, 1979'],['Chrystusa nie można wykluczyć z dziejów człowieka w żadnym punkcie globu ziemskiego.','Warszawa, 1979'],['Człowiek nie może żyć bez miłości.','Redemptor hominis, 1979'],['Człowiek jest pierwszą i podstawową drogą Kościoła.','Redemptor hominis, 1979'],['Wiara i rozum są jak dwa skrzydła, na których duch ludzki unosi się ku kontemplacji prawdy.','Fides et ratio, 1998'],['Przyszłość ludzkości idzie przez rodzinę.','Familiaris consortio, 1981'],['Praca jest dobrem człowieka — dobrem jego człowieczeństwa.','Laborem exercens, 1981'],['Naród jest wielką wspólnotą ludzi, których łączą różne więzi, ale przede wszystkim kultura.','UNESCO, 1980'],['Nie ma pokoju bez sprawiedliwości, nie ma sprawiedliwości bez przebaczenia.','Orędzie na Światowy Dzień Pokoju, 2002'],['Wstańcie, chodźmy!','2004'],['Totus Tuus — Cały Twój.','zawołanie papieskie'],['Wy jesteście nadzieją Kościoła, wy jesteście moją nadzieją.','do młodzieży (przypisywane)'],['Człowiek jest wielki nie przez to, co ma, lecz przez to, kim jest.','przypisywane']];
+const jq=JP[(dy+4)%JP.length];$('jp').textContent='„'+jq[0]+'”';$('jp').append(el('small','',jq[1]));
 const CC={pilka:'#2ecc71',kraj:'#4d7cff',kultura:'#ffc933',okazje:'#ff5a4d'};
 let items=[],seen=0,off=new Set(),failed=[];
 try{seen=+localStorage.getItem('seen')||0;off=new Set(JSON.parse(localStorage.getItem('off')||'[]'))}catch(e){}

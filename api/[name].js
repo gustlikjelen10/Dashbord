@@ -9,6 +9,7 @@ const H = {
   planes: require('../lib/planes.js'),
   radio: require('../lib/radio.js'),
   rss: require('../lib/rss.js'),
+  survived: require('../lib/survived.js'),
   today: require('../lib/today.js'),
   trains: require('../lib/trains.js'),
   youtube: require('../lib/youtube.js'),

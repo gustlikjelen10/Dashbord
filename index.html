@@ -132,6 +132,25 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 .bsr{display:flex;gap:8px;align-items:center;padding:3px 0;border-bottom:1px solid var(--bd);font-size:11px}.bsr b{min-width:22px;text-align:center;color:var(--y);border:1px solid var(--bd);font-size:11px}.bsr span{flex:1;min-width:0}.bsr i{font-style:normal;font-weight:700;white-space:nowrap}.bsr i.soon{color:var(--r)}.bsr.cx{text-decoration:line-through;opacity:.6}
 .live>header .tabs{flex-wrap:wrap}
 #jp{font-size:11px;line-height:1.3}#jp small{display:block;color:var(--y);font-size:10px;margin-top:2px}
+
+.live-bar{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.live-bar button{font:700 10px var(--mono);background:transparent;color:var(--mu);border:1px solid var(--bd);padding:2px 6px;border-radius:2px;cursor:pointer}
+.live-bar button.on,.live-bar button:hover{color:#0a0d10;background:var(--y);border-color:var(--y)}
+.wm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:6px;overflow:auto;align-content:start}
+.wm-grid.single{grid-template-columns:1fr}
+.wm-cell{position:relative;aspect-ratio:16/9;background:#07090c;border:1px solid var(--bd);border-radius:2px;overflow:hidden;min-height:115px}
+.wm-cell.active{border-color:var(--y)}
+.wm-cell iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.wm-hud{position:absolute;left:0;right:0;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:4px;padding:3px 6px;background:linear-gradient(180deg,rgba(0,0,0,.85),rgba(0,0,0,0));pointer-events:none}
+.wm-tag{font:700 10px var(--mono);color:#fff;display:flex;align-items:center;gap:5px;text-shadow:0 1px 2px #000}
+.wm-dot{width:6px;height:6px;border-radius:50%;background:var(--r);display:inline-block}
+.wm-dot.off{background:var(--mu)}
+.wm-acts{display:flex;gap:3px;pointer-events:auto}
+.wm-acts button,.wm-acts a{font:700 9px var(--mono);background:rgba(10,13,16,.85);color:var(--tx);border:1px solid var(--bd);padding:1px 5px;border-radius:2px;cursor:pointer;text-decoration:none}
+.wm-acts button:hover,.wm-acts a:hover{border-color:var(--y);color:var(--y)}
+.wm-off{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#0a0d10;color:var(--mu);font:700 11px var(--mono);cursor:pointer;border:0;width:100%}
+.wm-off:hover{color:var(--y)}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -141,7 +160,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 <div class="grid">
 <div class="col L">
 <section class="p news"><header><h2>Wiadomości</h2><em class="pill" id="nc"></em></header><div class="b"><div class="tiles" id="tl"></div><div class="nl" id="nw">Ładuję…</div></div></section>
-<section class="p live"><header><h2>Na żywo</h2><div class="tabs" id="lt"></div><a class="pill" id="ly" style="text-decoration:none" href="https://www.youtube.com" target="_blank" rel="noopener">YT →</a></header><div class="b tp on fr" id="lv"></div></section>
+<section class="p live"><header><h2>Na żywo · Multi-View</h2><div class="live-bar" id="lt"><button id="lvAll" title="Włącz wszystkie okienka">▶ WSZYSTKIE</button><button id="lvStop" title="Zatrzymaj wszystkie">■ STOP</button><button id="lvMode" title="Przełącz widok siatki / pojedynczy">SIATKA 2×N</button></div></header><div class="b wm-grid" id="lv"></div></section>
 </div>
 <div class="col R">
 <div class="row">
@@ -338,18 +357,116 @@ function planes(){initMap();fetch('/api/planes').then(r=>r.json()).then(j=>{cons
     const r=el('div','r'),w=el('span');if(a.o)w.append(el('div','',a.o+' → '+a.dd+(a.dc?' · '+a.dc:'')));w.append(el('small','sm',(a.al?a.al+' · ':'')+(a.t?a.t+' · ':'')+a.alt+' m · '+a.gs+' km/h · '+a.d+' km'));r.append(el('b','',a.f),w);b.append(r)})}).catch(()=>{$('plc').textContent='BŁĄD'})}
 planes();setInterval(planes,30000);
 document.querySelectorAll('nav.tabs').forEach(n=>n.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=n.closest('section');n.querySelectorAll('button').forEach(x=>x.className=x===b?'on':'');p.querySelectorAll('.tp').forEach(t=>t.classList.toggle('on',t.id===b.dataset.t))}));
-const LIVE=[['TVP Info','tvpinfo',0],['Sky News','UCoMdktPbSTixAyNGwb-UYkQ',1],['DW News','UCknLrEdhRCp1aegoMqRaCZg',1],['France 24','UCQfwfsi5VrQ8yKZ-UWmAEFg',1],['Al Jazeera','UCNye-wNBqNL5ZzHSJj3l8Bg',1],['Euronews','UCSrZ3UV4jOidv8ppoVuvW9Q',1]];
-function lvSel(i){try{localStorage.setItem('live',i)}catch(e){}[...$('lt').children].forEach((b,k)=>b.className=k===i?'on':'');const q=LIVE[i][1];$('ly').href=/^UC/.test(q)?'https://www.youtube.com/channel/'+q+'/live':'https://www.youtube.com/@'+q+'/live';
-  $('lv').innerHTML='';const p=el('button','lpb','▶ Włącz: '+LIVE[i][0]);p.onclick=()=>play(i,p);$('lv').append(p)}
-const bad=(p,t)=>{p.textContent=t+' Otwórz na YouTube →';p.onclick=()=>window.open($('ly').href,'_blank');$('lv').innerHTML='';$('lv').append(p)};
-async function play(i,p){p.textContent='Łączę…';let j={};
-  try{j=await (await fetch('/api/live?h='+LIVE[i][1])).json()}catch(e){}
-  if(!j.id&&!j.vid)return bad(p,'Nie znaleziono transmisji.');
-  if(!j.vid){if(LIVE[i][2]){const f=document.createElement('iframe');f.src='https://www.youtube.com/embed/live_stream?channel='+j.id+'&autoplay=1&mute=1';f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;$('lv').innerHTML='';$('lv').append(f);return}return bad(p,'Nie znaleziono transmisji na żywo.')}
-  if(!window.YT){await new Promise(r=>{window.onYouTubeIframeAPIReady=r;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.append(s)})}
-  $('lv').innerHTML='<div id="yp"></div>';
-  new YT.Player('yp',{width:'100%',height:'100%',videoId:j.vid,playerVars:{autoplay:1,mute:1,playsinline:1},events:{onError:e=>bad(el('button','lpb'),[101,150].includes(e.data)?'Nadawca zablokował osadzanie.':'Błąd odtwarzania ('+e.data+').')}})}
-LIVE.forEach(([n],i)=>{const b=el('button','',n);b.onclick=()=>lvSel(i);$('lt').append(b)});let li=0;try{li=Math.min(+localStorage.getItem('live')||0,LIVE.length-1)}catch(e){}lvSel(li);
+const LIVE=[
+  {n:'Webcamera',v:'s0Z4b4S0mdk',id:'UC3r32262696666'}, // id nadpisze się automatycznie z /api/live?v=s0Z4b4S0mdk
+  {n:'TVP Info',h:'tvpinfo',id:'UCc282c_TN8xIba_Z6GaDnQw'},
+  {n:'Sky News',id:'UCoMdktPbSTixAyNGwb-UYkQ'},
+  {n:'DW News',id:'UCknLrEdhRCp1aegoMqRaCZg'},
+  {n:'France 24',id:'UCQfwfsi5VrQ8yKZ-UWmAEFg'},
+  {n:'Al Jazeera',id:'UCNye-wNBqNL5ZzHSJj3l8Bg'},
+  {n:'Euronews',id:'UCSrZ3UV4jOidv8ppoVuvW9Q'}
+];
+// Wyczyść placeholder ID dla Webcamera, aby backend wyciągnął prawdziwy channelId z v=s0Z4b4S0mdk
+LIVE[0].id='';
+
+let lvSingle=-1,lvPlaying=new Set();
+try{const s=JSON.parse(localStorage.getItem('lv_on')||'[]');if(Array.isArray(s))lvPlaying=new Set(s)}catch(e){}
+const saveLv=()=>{try{localStorage.setItem('lv_on',JSON.stringify([...lvPlaying]))}catch(e){}};
+
+function ytEmbedUrl(ch,muted=true){
+  const m=muted?'1':'0';
+  const base=ch.id
+    ?'https://www.youtube.com/embed/live_stream?channel='+ch.id
+    :(ch.vid?'https://www.youtube.com/embed/'+ch.vid:'');
+  if(!base)return '';
+  const sep=base.includes('?')?'&':'?';
+  return base+sep+'autoplay=1&mute='+m+'&playsinline=1&rel=0&modestbranding=1';
+}
+
+function ytWatchUrl(ch){
+  if(ch.id)return 'https://www.youtube.com/channel/'+ch.id+'/live';
+  if(ch.h)return 'https://www.youtube.com/@'+ch.h+'/live';
+  if(ch.v)return 'https://www.youtube.com/watch?v='+ch.v;
+  return 'https://www.youtube.com';
+}
+
+async function resolveStream(ch){
+  if(ch._resolved)return;
+  ch._resolved=true;
+  const q=ch.v?'v='+ch.v:(ch.id?'h='+ch.id:'h='+ch.h);
+  try{
+    const j=await (await fetch('/api/live?'+q)).json();
+    if(j.id)ch.id=j.id;
+    if(j.vid)ch.vid=j.vid;
+  }catch(e){}
+}
+
+async function startCell(i,muted=true){
+  const ch=LIVE[i],cell=$('wmc_'+i);
+  if(!cell)return;
+  lvPlaying.add(i);saveLv();
+  const body=cell.querySelector('.wm-body');
+  body.innerHTML='<div class="wm-off">Łączę '+ch.n+'…</div>';
+  await resolveStream(ch);
+  const src=ytEmbedUrl(ch,muted);
+  if(!src){
+    body.innerHTML='<a class="wm-off" href="'+ytWatchUrl(ch)+'" target="_blank" rel="noopener">Brak streamu · Otwórz YT →</a>';
+    return;
+  }
+  const f=document.createElement('iframe');
+  f.src=src;
+  f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+  f.referrerPolicy='strict-origin-when-cross-origin';
+  f.allowFullscreen=true;
+  body.innerHTML='';
+  body.append(f);
+  const dot=cell.querySelector('.wm-dot');if(dot)dot.classList.remove('off');
+}
+
+function stopCell(i){
+  lvPlaying.delete(i);saveLv();
+  const ch=LIVE[i],cell=$('wmc_'+i);
+  if(!cell)return;
+  const body=cell.querySelector('.wm-body');
+  body.innerHTML='<button class="wm-off" onclick="startCell('+i+',true)">▶ '+ch.n+'</button>';
+  const dot=cell.querySelector('.wm-dot');if(dot)dot.classList.add('off');
+}
+
+function renderLiveGrid(){
+  const box=$('lv');
+  box.className='b wm-grid'+(lvSingle>=0?' single':'');
+  $('lvMode').textContent=lvSingle>=0?'WRÓĆ DO SIATKI':'SIATKA 2×N';
+  box.innerHTML='';
+  LIVE.forEach((ch,i)=>{
+    if(lvSingle>=0&&lvSingle!==i)return;
+    const cell=el('div','wm-cell'+(lvSingle===i?' active':''));cell.id='wmc_'+i;
+    const hud=el('div','wm-hud');
+    const tag=el('span','wm-tag');
+    const dot=el('i','wm-dot'+(lvPlaying.has(i)?'':' off'));
+    tag.append(dot,ch.n);
+    const acts=el('div','wm-acts');
+    const bSnd=el('button','','🔊');bSnd.title='Odtwórz z dźwiękiem (wycisza pozostałe)';
+    bSnd.onclick=()=>{LIVE.forEach((_,k)=>{if(k!==i&&lvPlaying.has(k))startCell(k,true)});startCell(i,false)};
+    const bMax=el('button','',lvSingle===i?'↙':'↗');bMax.title=lvSingle===i?'Pokaż wszystkie okienka':'Powiększ to okno';
+    bMax.onclick=()=>{lvSingle=(lvSingle===i?-1:i);renderLiveGrid();if(lvSingle>=0&&!lvPlaying.has(i))startCell(i,false)};
+    const bCls=el('button','','×');bCls.title='Zatrzymaj okno';
+    bCls.onclick=()=>stopCell(i);
+    const aYt=el('a','','YT');aYt.href=ytWatchUrl(ch);aYt.target='_blank';aYt.rel='noopener';aYt.title='Otwórz w YouTube';
+    acts.append(bSnd,bMax,bCls,aYt);
+    hud.append(tag,acts);
+    const body=el('div','wm-body');
+    cell.append(hud,body);
+    box.append(cell);
+    if(lvPlaying.has(i))startCell(i,true);
+    else body.innerHTML='<button class="wm-off" onclick="startCell('+i+',true)">▶ '+ch.n+'</button>';
+  });
+}
+
+$('lvAll').onclick=()=>LIVE.forEach((_,i)=>startCell(i,true));
+$('lvStop').onclick=()=>{lvSingle=-1;LIVE.forEach((_,i)=>stopCell(i));renderLiveGrid()};
+$('lvMode').onclick=()=>{lvSingle=(lvSingle>=0?-1:0);renderLiveGrid()};
+renderLiveGrid();
+
 const ra=$('ra'),rb=$('rb'),HLS='https://stream15.polskieradio.pl/pr24/pr24.sdp/playlist.m3u8';ra.volume=.6;$('rv').oninput=e=>ra.volume=+e.target.value;
 let rc=null,rh=null;
 const loadHls=()=>window.Hls?Promise.resolve():new Promise((r,j)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.17/hls.min.js';s.onload=r;s.onerror=j;document.head.append(s)});
@@ -392,15 +509,35 @@ document.querySelectorAll('section.p>header').forEach(hd=>{const x=document.crea
 const JP=[['Nie lękajcie się! Otwórzcie na oścież drzwi Chrystusowi.','inauguracja pontyfikatu, 1978'],['Musicie od siebie wymagać, nawet gdyby inni od was nie wymagali.','Westerplatte, 1987'],['Niech zstąpi Duch Twój i odnowi oblicze ziemi. Tej ziemi.','Warszawa, 1979'],['Chrystusa nie można wykluczyć z dziejów człowieka w żadnym punkcie globu ziemskiego.','Warszawa, 1979'],['Człowiek nie może żyć bez miłości.','Redemptor hominis, 1979'],['Człowiek jest pierwszą i podstawową drogą Kościoła.','Redemptor hominis, 1979'],['Wiara i rozum są jak dwa skrzydła, na których duch ludzki unosi się ku kontemplacji prawdy.','Fides et ratio, 1998'],['Przyszłość ludzkości idzie przez rodzinę.','Familiaris consortio, 1981'],['Praca jest dobrem człowieka — dobrem jego człowieczeństwa.','Laborem exercens, 1981'],['Naród jest wielką wspólnotą ludzi, których łączą różne więzi, ale przede wszystkim kultura.','UNESCO, 1980'],['Nie ma pokoju bez sprawiedliwości, nie ma sprawiedliwości bez przebaczenia.','Orędzie na Światowy Dzień Pokoju, 2002'],['Wstańcie, chodźmy!','2004'],['Totus Tuus — Cały Twój.','zawołanie papieskie'],['Wy jesteście nadzieją Kościoła, wy jesteście moją nadzieją.','do młodzieży (przypisywane)'],['Człowiek jest wielki nie przez to, co ma, lecz przez to, kim jest.','przypisywane']];
 const jq=JP[(dy+4)%JP.length];$('jp').textContent='„'+jq[0]+'”';$('jp').append(el('small','',jq[1]));
 const PPL=[["Paul Walker", "aktor", "1973-09-12", "2013-11-30"], ["John Lennon", "muzyk, The Beatles", "1940-10-09", "1980-12-08"], ["Bernhard Riemann", "matematyk", "1826-09-17", "1866-07-20"], ["Fryderyk Chopin", "kompozytor", "1810-03-01", "1849-10-17"], ["Juliusz Słowacki", "poeta", "1809-09-04", "1849-04-03"], ["Che Guevara", "rewolucjonista", "1928-06-14", "1967-10-09"], ["Zbigniew Cybulski", "aktor", "1927-11-03", "1967-01-08"], ["Blaise Pascal", "matematyk i filozof", "1623-06-19", "1662-08-19"], ["Stanisław Wyspiański", "malarz i dramaturg", "1869-01-15", "1907-11-28"], ["Felix Mendelssohn", "kompozytor", "1809-02-03", "1847-11-04"], ["Florence Griffith-Joyner", "lekkoatletka", "1959-12-21", "1998-09-21"], ["Roberto Clemente", "baseballista", "1934-08-18", "1972-12-31"], ["Corey Haim", "aktor", "1971-12-23", "2010-03-10"], ["Thomas Sankara", "prezydent Burkina Faso", "1949-12-21", "1987-10-15"], ["Vincent van Gogh", "malarz", "1853-03-30", "1890-07-29"], ["Michael Hutchence", "wokalista INXS", "1960-01-22", "1997-11-22"], ["Aleksandr Puszkin", "poeta", "1799-06-06", "1837-02-10"], ["Krzysztof Komeda", "kompozytor jazzowy", "1931-04-27", "1969-04-23"], ["Jerzy Popiełuszko", "ksiądz, kapelan Solidarności", "1947-09-14", "1984-10-19"], ["Gaetano Scirea", "piłkarz", "1953-05-25", "1989-09-03"], ["Justin Fashanu", "piłkarz", "1961-02-19", "1998-05-02"], ["Marilyn Monroe", "aktorka", "1926-06-01", "1962-08-04"], ["Bob Marley", "muzyk", "1945-02-06", "1981-05-11"], ["Diana, księżna Walii", "księżna", "1961-07-01", "1997-08-31"], ["Lord Byron", "poeta", "1788-01-22", "1824-04-19"], ["Wolfgang Amadeus Mozart", "kompozytor", "1756-01-27", "1791-12-05"], ["Ayrton Senna", "kierowca F1", "1960-03-21", "1994-05-01"], ["Marco Pantani", "kolarz", "1970-01-13", "2004-02-14"], ["Patrice Lumumba", "premier Konga", "1925-07-02", "1961-01-17"], ["Georges Bizet", "kompozytor", "1838-10-25", "1875-06-03"], ["Robert Enke", "bramkarz", "1977-08-24", "2009-11-10"], ["Marc-Vivien Foé", "piłkarz", "1975-05-01", "2003-06-26"], ["Marek Hłasko", "pisarz", "1934-01-14", "1969-06-14"], ["Amy Winehouse", "piosenkarka", "1983-09-14", "2011-07-23"], ["Heath Ledger", "aktor", "1979-04-04", "2008-01-22"], ["Kurt Cobain", "muzyk, Nirvana", "1967-02-20", "1994-04-05"], ["Bruce Lee", "aktor", "1940-11-27", "1973-07-20"], ["Jimi Hendrix", "gitarzysta", "1942-11-27", "1970-09-18"], ["Jim Morrison", "wokalista The Doors", "1943-12-08", "1971-07-03"], ["Janis Joplin", "piosenkarka", "1943-01-19", "1970-10-04"], ["Tupac Shakur", "raper", "1971-06-16", "1996-09-13"], ["James Dean", "aktor", "1931-02-08", "1955-09-30"], ["Anna Jantar", "piosenkarka", "1950-06-10", "1980-03-14"], ["Diogo Jota", "piłkarz", "1996-12-04", "2025-07-03"], ["Emiliano Sala", "piłkarz", "1990-10-31", "2019-01-21"], ["Davide Astori", "piłkarz", "1987-01-07", "2018-03-04"], ["Franz Schubert", "kompozytor", "1797-01-31", "1828-11-19"], ["Aaliyah", "piosenkarka", "1979-01-16", "2001-08-25"]];
-(()=>{const U=s=>{const p=s.split('-').map(Number);return Date.UTC(p[0],p[1]-1,p[2])},T=new Date(),today=Date.UTC(T.getFullYear(),T.getMonth(),T.getDate()),born=Date.UTC(1986,6,12);
+(async()=>{
+  const U=s=>{const p=s.split('-').map(Number);return Date.UTC(p[0],p[1]-1,p[2])},T=new Date(),today=Date.UTC(T.getFullYear(),T.getMonth(),T.getDate()),born=Date.UTC(1986,6,12);
   const yd=(a,b)=>{const A=new Date(a),B=new Date(b);let y=B.getUTCFullYear()-A.getUTCFullYear();if(b<Date.UTC(B.getUTCFullYear(),A.getUTCMonth(),A.getUTCDate()))y--;
     return[y,Math.round((b-Date.UTC(A.getUTCFullYear()+y,A.getUTCMonth(),A.getUTCDate()))/864e5)]};
   const my=Math.round((today-born)/864e5),m=yd(born,today),fmt=n=>n.toLocaleString('pl-PL'),box=$('ol');
-  box.append(el('div','',''),'');box.textContent='';
-  box.append(el('p','','Dziś minęło '+m[0]+' lat i '+m[1]+' dni, czyli '+fmt(my)+' dni.'));
-  box.append(el('p','sm','Najbliżsi, którzy nie dożyli Twojego wieku:'));
-  PPL.map(p=>({n:p[0],d:p[1],ad:Math.round((U(p[3])-U(p[2]))/864e5),a:yd(U(p[2]),U(p[3]))})).filter(x=>x.ad<my).sort((a,b)=>b.ad-a.ad).slice(0,5).forEach(x=>{
-    const r=el('div','r'),w=el('span');w.append(el('div','',x.n));w.append(el('small','sm',x.d+' · '+x.a[0]+' l. '+x.a[1]+' d. ('+fmt(x.ad)+' dni), o '+fmt(my-x.ad)+' dni krócej'));r.append(w);box.append(r)})})();
+  const renderList=(list,srcLabel)=>{
+    box.textContent='';
+    box.append(el('p','','Dziś minęło '+m[0]+' lat i '+m[1]+' dni, czyli '+fmt(my)+' dni.'));
+    box.append(el('p','sm','Najbliżsi, którzy nie dożyli Twojego wieku'+(srcLabel?' ('+srcLabel+')':'')+':'));
+    list.slice(0,5).forEach(x=>{
+      const r=el('div','r'),w=el('span');
+      w.append(el('div','',x.n));
+      w.append(el('small','sm',x.d+' · '+x.a[0]+' l. '+x.a[1]+' d. ('+fmt(x.ad)+' dni), o '+fmt(my-x.ad)+' dni krócej'));
+      r.append(w);box.append(r);
+    });
+  };
+  const fallback=()=>PPL.map(p=>({n:p[0],d:p[1],ad:Math.round((U(p[3])-U(p[2]))/864e5),a:yd(U(p[2]),U(p[3]))})).filter(x=>x.ad<my).sort((a,b)=>b.ad-a.ad);
+  renderList(fallback(),'ładowanie Wikidaty…');
+  try{
+    const j=await (await fetch('/api/survived')).json();
+    if(j&&Array.isArray(j.items)&&j.items.length>=3){
+      renderList(j.items,'Wikidata · auto');
+    }else{
+      renderList(fallback(),'');
+    }
+  }catch(e){
+    renderList(fallback(),'');
+  }
+})();
 const CC={pilka:'#2ecc71',kraj:'#4d7cff',kultura:'#ffc933',okazje:'#ff5a4d'};
 let items=[],seen=0,off=new Set(),failed=[];
 try{seen=+localStorage.getItem('seen')||0;off=new Set(JSON.parse(localStorage.getItem('off')||'[]'))}catch(e){}

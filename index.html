@@ -165,6 +165,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 <section class="p w2"><header><h2>Samoloty nad Piotrkowem</h2><em class="pill" id="plc">…</em></header><div class="b"><div class="pl2"><div id="map"></div><div id="pl">Ładuję…</div></div></div></section>
 <section class="p w2"><header><h2>YouTube · nowości</h2></header><div class="b"><div class="yt" id="yt">Ładuję…</div></div></section>
 <section class="p jr"><header><h2>Koszulka</h2><a class="pill" style="text-decoration:none" href="https://koszulki-kolekcja.vercel.app/" target="_blank" rel="noopener">KATALOG →</a></header><div class="b"><div id="js">Ładuję…</div></div></section>
+<section class="p"><header><h2>Kogo przeżyłem</h2><em class="pill" id="olp"></em></header><div class="b"><div id="ol">Ładuję…</div></div></section>
 </div>
 </div>
 </div>
@@ -391,6 +392,23 @@ document.querySelectorAll('section.p>header').forEach(hd=>{const x=document.crea
     setTimeout(()=>{try{if(map)map.invalidateSize()}catch(e){}},50)};hd.append(x)});
 const JP=[['Nie lękajcie się! Otwórzcie na oścież drzwi Chrystusowi.','inauguracja pontyfikatu, 1978'],['Musicie od siebie wymagać, nawet gdyby inni od was nie wymagali.','Westerplatte, 1987'],['Niech zstąpi Duch Twój i odnowi oblicze ziemi. Tej ziemi.','Warszawa, 1979'],['Chrystusa nie można wykluczyć z dziejów człowieka w żadnym punkcie globu ziemskiego.','Warszawa, 1979'],['Człowiek nie może żyć bez miłości.','Redemptor hominis, 1979'],['Człowiek jest pierwszą i podstawową drogą Kościoła.','Redemptor hominis, 1979'],['Wiara i rozum są jak dwa skrzydła, na których duch ludzki unosi się ku kontemplacji prawdy.','Fides et ratio, 1998'],['Przyszłość ludzkości idzie przez rodzinę.','Familiaris consortio, 1981'],['Praca jest dobrem człowieka — dobrem jego człowieczeństwa.','Laborem exercens, 1981'],['Naród jest wielką wspólnotą ludzi, których łączą różne więzi, ale przede wszystkim kultura.','UNESCO, 1980'],['Nie ma pokoju bez sprawiedliwości, nie ma sprawiedliwości bez przebaczenia.','Orędzie na Światowy Dzień Pokoju, 2002'],['Wstańcie, chodźmy!','2004'],['Totus Tuus — Cały Twój.','zawołanie papieskie'],['Wy jesteście nadzieją Kościoła, wy jesteście moją nadzieją.','do młodzieży (przypisywane)'],['Człowiek jest wielki nie przez to, co ma, lecz przez to, kim jest.','przypisywane']];
 const jq=JP[(dy+4)%JP.length];$('jp').textContent='„'+jq[0]+'”';$('jp').append(el('small','',jq[1]));
+(()=>{const T=new Date(),Y=T.getFullYear(),M=T.getMonth()+1,D=T.getDate(),my=(Date.UTC(Y,M-1,D)-Date.UTC(1986,6,12))/864e5,yrs=Math.floor(my/365.2425);
+  $('olp').textContent=yrs+' lat · '+Math.floor(my).toLocaleString('pl-PL')+' dni';
+  const key='ol-'+Y+'-'+M+'-'+D,box=$('ol');
+  const show=l=>{box.textContent='';
+    if(!l.length){box.append(el('p','sm','Nikt znany z bazy nie zmarł tego dnia młodszy od Ciebie.'));return}
+    box.append(el('p','sm','Zmarli '+D+'.'+String(M).padStart(2,'0')+' w wieku młodszym niż Twój:'));
+    l.slice(0,15).forEach(x=>{const r=el('div','r'),w=el('span');w.append(el('div','',x.n));w.append(el('small','sm',x.a+' l.'+(x.d?' · '+x.d:'')));r.append(el('b','',x.y),w);box.append(r)})};
+  let c=null;try{c=JSON.parse(localStorage.getItem(key))}catch(e){}
+  if(c){show(c);return}
+  const q='SELECT ?pLabel ?pDescription ?dob ?dod ?sl WHERE{?p wdt:P31 wd:Q5;wikibase:sitelinks ?sl;wdt:P570 ?dod;wdt:P569 ?dob.FILTER(?sl>=15)FILTER(MONTH(?dod)='+M+'&&DAY(?dod)='+D+')FILTER(YEAR(?dod)-YEAR(?dob)<='+(yrs+1)+')SERVICE wikibase:label{bd:serviceParam wikibase:language "pl,en".}}ORDER BY DESC(?sl) LIMIT 150';
+  fetch('https://query.wikidata.org/sparql?format=json&query='+encodeURIComponent(q)).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(j=>{
+    const l=[];j.results.bindings.forEach(b=>{const dob=Date.parse(b.dob.value),dod=Date.parse(b.dod.value);if(isNaN(dob)||isNaN(dod))return;
+      const ad=(dod-dob)/864e5;if(ad>=my||ad<0)return;
+      l.push({n:b.pLabel.value,d:b.pDescription?b.pDescription.value:'',y:new Date(dod).getUTCFullYear(),a:Math.floor(ad/365.2425),ad,sl:+b.sl.value})});
+    l.sort((a,b)=>b.ad-a.ad||b.sl-a.sl);
+    try{localStorage.setItem(key,JSON.stringify(l.slice(0,30)))}catch(e){}
+    show(l)}).catch(e=>{box.textContent='Brak danych z Wikidata ('+e.message+').'})})();
 const CC={pilka:'#2ecc71',kraj:'#4d7cff',kultura:'#ffc933',okazje:'#ff5a4d'};
 let items=[],seen=0,off=new Set(),failed=[];
 try{seen=+localStorage.getItem('seen')||0;off=new Set(JSON.parse(localStorage.getItem('off')||'[]'))}catch(e){}

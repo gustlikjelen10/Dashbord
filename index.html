@@ -359,7 +359,7 @@ planes();setInterval(planes,30000);
 document.querySelectorAll('nav.tabs').forEach(n=>n.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=n.closest('section');n.querySelectorAll('button').forEach(x=>x.className=x===b?'on':'');p.querySelectorAll('.tp').forEach(t=>t.classList.toggle('on',t.id===b.dataset.t))}));
 const LIVE=[
   {n:'Webcamera',v:'s0Z4b4S0mdk',id:'UC3r32262696666'}, // id nadpisze się automatycznie z /api/live?v=s0Z4b4S0mdk
-  {n:'TVP Info',h:'tvpinfo',id:'UCc282c_TN8xIba_Z6GaDnQw'},
+  {n:'TV Republika',h:'TelewizjaRepublika',id:'UCc282c_TN8xIba_Z6GaDnQw'},
   {n:'Sky News',id:'UCoMdktPbSTixAyNGwb-UYkQ'},
   {n:'DW News',id:'UCknLrEdhRCp1aegoMqRaCZg'},
   {n:'France 24',id:'UCQfwfsi5VrQ8yKZ-UWmAEFg'},
@@ -375,9 +375,11 @@ const saveLv=()=>{try{localStorage.setItem('lv_on',JSON.stringify([...lvPlaying]
 
 function ytEmbedUrl(ch,muted=true){
   const m=muted?'1':'0';
-  const base=ch.id
-    ?'https://www.youtube.com/embed/live_stream?channel='+ch.id
-    :(ch.vid?'https://www.youtube.com/embed/'+ch.vid:'');
+  // Preferuj konkretny znaleziony aktywny stream (ch.vid) - działa dla Sky News i Webcamera,
+  // a gdy go nie ma, użyj stałego kanału live_stream?channel=ch.id
+  const base=ch.vid
+    ?'https://www.youtube.com/embed/'+ch.vid
+    :(ch.id?'https://www.youtube.com/embed/live_stream?channel='+ch.id:'');
   if(!base)return '';
   const sep=base.includes('?')?'&':'?';
   return base+sep+'autoplay=1&mute='+m+'&playsinline=1&rel=0&modestbranding=1';

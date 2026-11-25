@@ -358,16 +358,14 @@ function planes(){initMap();fetch('/api/planes').then(r=>r.json()).then(j=>{cons
 planes();setInterval(planes,30000);
 document.querySelectorAll('nav.tabs').forEach(n=>n.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=n.closest('section');n.querySelectorAll('button').forEach(x=>x.className=x===b?'on':'');p.querySelectorAll('.tp').forEach(t=>t.classList.toggle('on',t.id===b.dataset.t))}));
 const LIVE=[
-  {n:'Webcamera',v:'s0Z4b4S0mdk',id:'UC3r32262696666'}, // id nadpisze się automatycznie z /api/live?v=s0Z4b4S0mdk
-  {n:'TV Republika',h:'TelewizjaRepublika',id:'UCc282c_TN8xIba_Z6GaDnQw'},
+  {n:'Webcamera',v:'s0Z4b4S0mdk',id:''},
+  {n:'wPolsce24',id:'UCc282c_TN8xIba_Z6GaDnQw'},
   {n:'Sky News',id:'UCoMdktPbSTixAyNGwb-UYkQ'},
-  {n:'DW News',id:'UCknLrEdhRCp1aegoMqRaCZg'},
-  {n:'France 24',id:'UCQfwfsi5VrQ8yKZ-UWmAEFg'},
-  {n:'Al Jazeera',id:'UCNye-wNBqNL5ZzHSJj3l8Bg'},
+  {n:'FRANCE 24 English',id:'UCQfwfsi5VrQ8yKZ-UWmAEFg'},
+  {n:'TVP Info',h:'tvpinfo',id:''},
+  {n:'RMF24',h:'RMF24pl',id:''},
   {n:'Euronews',id:'UCSrZ3UV4jOidv8ppoVuvW9Q'}
 ];
-// Wyczyść placeholder ID dla Webcamera, aby backend wyciągnął prawdziwy channelId z v=s0Z4b4S0mdk
-LIVE[0].id='';
 
 let lvSingle=-1,lvPlaying=new Set();
 try{const s=JSON.parse(localStorage.getItem('lv_on')||'[]');if(Array.isArray(s))lvPlaying=new Set(s)}catch(e){}
@@ -392,7 +390,7 @@ function ytWatchUrl(ch){
   return 'https://www.youtube.com';
 }
 
-async function resolveStream(ch){
+async function resolveStream(ch,idx){
   if(ch._resolved)return;
   ch._resolved=true;
   const q=ch.v?'v='+ch.v:(ch.id?'h='+ch.id:'h='+ch.h);
@@ -400,6 +398,11 @@ async function resolveStream(ch){
     const j=await (await fetch('/api/live?'+q)).json();
     if(j.id)ch.id=j.id;
     if(j.vid)ch.vid=j.vid;
+    if(j.name&&!ch.v){
+      ch.n=j.name;
+      const lbl=$('wmt_'+idx);
+      if(lbl)lbl.textContent=j.name;
+    }
   }catch(e){}
 }
 
@@ -409,7 +412,7 @@ async function startCell(i,muted=true){
   lvPlaying.add(i);saveLv();
   const body=cell.querySelector('.wm-body');
   body.innerHTML='<div class="wm-off">Łączę '+ch.n+'…</div>';
-  await resolveStream(ch);
+  await resolveStream(ch,i);
   const src=ytEmbedUrl(ch,muted);
   if(!src){
     body.innerHTML='<a class="wm-off" href="'+ytWatchUrl(ch)+'" target="_blank" rel="noopener">Brak streamu · Otwórz YT →</a>';
@@ -445,7 +448,8 @@ function renderLiveGrid(){
     const hud=el('div','wm-hud');
     const tag=el('span','wm-tag');
     const dot=el('i','wm-dot'+(lvPlaying.has(i)?'':' off'));
-    tag.append(dot,ch.n);
+    const lbl=el('span','',ch.n);lbl.id='wmt_'+i;
+    tag.append(dot,lbl);
     const acts=el('div','wm-acts');
     const bSnd=el('button','','🔊');bSnd.title='Odtwórz z dźwiękiem (wycisza pozostałe)';
     bSnd.onclick=()=>{LIVE.forEach((_,k)=>{if(k!==i&&lvPlaying.has(k))startCell(k,true)});startCell(i,false)};

@@ -2,6 +2,7 @@ const H = {
   apps: require('../lib/apps.js'),
   bus: require('../lib/bus.js'),
   calendar: require('../lib/calendar.js'),
+  imgw: require('../lib/imgw.js'),
   imieniny: require('../lib/imieniny.js'),
   koszulka: require('../lib/koszulka.js'),
   live: require('../lib/live.js'),

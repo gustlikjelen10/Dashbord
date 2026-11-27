@@ -151,6 +151,7 @@ td{font-size:12px;padding:4px 0}td:nth-child(n+2){font-size:11px}.up,.dn{font-si
 .wm-off{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#0a0d10;color:var(--mu);font:700 11px var(--mono);cursor:pointer;border:0;width:100%}
 .wm-off:hover{color:var(--y)}
 
+.al.w1{border-color:var(--y);color:var(--y)}.al.w2{border-color:#ff8a30;color:#ff8a30}.al.w3{border-color:var(--r);color:var(--r)}.al.ok{border-color:#1f5a3a;color:var(--g)}.al{padding:5px 8px;font-size:12px;margin-top:5px}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -208,6 +209,14 @@ function ic(c){
   return '<svg viewBox="0 0 64 64"><g transform="translate(6 0)">'+CL+'</g><g '+S+' style="color:#4d7cff"><path d="M22 50l-3 8M34 50l-3 8M46 50l-3 8"/></g></svg>';
 }
 const WMO={0:'Bezchmurnie',1:'Prawie bezchmurnie',2:'Częściowe zachmurzenie',3:'Pochmurno',45:'Mgła',48:'Mgła',51:'Mżawka',53:'Mżawka',55:'Mżawka',61:'Deszcz',63:'Deszcz',65:'Silny deszcz',71:'Śnieg',73:'Śnieg',75:'Silny śnieg',80:'Przelotny deszcz',81:'Przelotny deszcz',82:'Ulewa',95:'Burza',96:'Burza z gradem',99:'Burza z gradem'};
+let CALC=[],IMG=null;
+function renderAl(){const b=$('al');if(!b)return;b.textContent='';
+  if(IMG&&IMG.ok){if(IMG.items.length)IMG.items.forEach(w=>{const d=el('div','al w'+Math.min(3,w.s));d.append(el('b','','IMGW '+w.s+'° · '+w.e),el('small','sm',(w.from?' '+w.from+' → '+w.to:'')+(w.p?' · '+w.p+'%':'')));if(w.t)d.title=w.t;b.append(d)});
+    else b.append(el('div','al ok','IMGW: brak ostrzeżeń dla Piotrkowa'))}
+  CALC.forEach(x=>b.append(el('div','al w',x)));
+  if(!IMG||!IMG.ok){if(!CALC.length)b.append(el('div','al','Brak ostrzeżeń w prognozie na dziś i jutro'));b.append(el('p','sm','Z prognozy, nie oficjalne IMGW'+(IMG&&IMG.err?' ('+IMG.err+')':'')+'.'))}}
+function imgw(){fetch('/api/imgw').then(r=>r.json()).then(j=>{IMG=j;renderAl()}).catch(()=>{IMG={ok:false,err:'brak połączenia'};renderAl()})}
+imgw();setInterval(imgw,900000);
 fetch('https://api.open-meteo.com/v1/forecast?latitude=51.405&longitude=19.703&current=temperature_2m,weather_code,wind_speed_10m,apparent_temperature&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset,wind_gusts_10m_max,precipitation_sum,snowfall_sum&timezone=Europe%2FWarsaw&forecast_days=4')
 .then(r=>r.json()).then(j=>{
   const c=j.current,d=j.daily;
@@ -225,7 +234,7 @@ fetch('https://api.open-meteo.com/v1/forecast?latitude=51.405&longitude=19.703&c
     if(d.temperature_2m_min[i]<=-10)A.push(n+': mróz '+Math.round(d.temperature_2m_min[i])+'°');
     if(d.temperature_2m_max[i]>=30)A.push(n+': upał '+Math.round(d.temperature_2m_max[i])+'°');
     if(d.weather_code[i]>=95)A.push(n+': możliwa burza')}
-  $('al').innerHTML=(A.length?A.map(a=>'<div class="al w">'+a+'</div>').join(''):'<div class="al">Brak ostrzeżeń w prognozie na dziś i jutro</div>')+'<p class="sm" style="margin-top:6px">Wyliczone z prognozy, nie są to oficjalne ostrzeżenia IMGW.</p>';
+  CALC=A;renderAl();
 }).catch(()=>$('wx').textContent='Brak danych pogodowych');
 fetch('https://air-quality-api.open-meteo.com/v1/air-quality?latitude=51.405&longitude=19.703&current=european_aqi,pm2_5,pm10&timezone=Europe%2FWarsaw')
 .then(r=>r.json()).then(j=>{const c=j.current,a=c.european_aqi,L=['Bardzo dobra','Dobra','Umiarkowana','Zła','Bardzo zła','Skrajnie zła'];
@@ -358,14 +367,16 @@ function planes(){initMap();fetch('/api/planes').then(r=>r.json()).then(j=>{cons
 planes();setInterval(planes,30000);
 document.querySelectorAll('nav.tabs').forEach(n=>n.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=n.closest('section');n.querySelectorAll('button').forEach(x=>x.className=x===b?'on':'');p.querySelectorAll('.tp').forEach(t=>t.classList.toggle('on',t.id===b.dataset.t))}));
 const LIVE=[
-  {n:'Webcamera',v:'s0Z4b4S0mdk',id:''},
-  {n:'wPolsce24',id:'UCc282c_TN8xIba_Z6GaDnQw'},
+  {n:'Webcamera',v:'s0Z4b4S0mdk',id:'UC3r32262696666'}, // id nadpisze się automatycznie z /api/live?v=s0Z4b4S0mdk
+  {n:'TV Republika',h:'TelewizjaRepublika'},
   {n:'Sky News',id:'UCoMdktPbSTixAyNGwb-UYkQ'},
-  {n:'FRANCE 24 English',id:'UCQfwfsi5VrQ8yKZ-UWmAEFg'},
-  {n:'TVP Info',h:'tvpinfo',id:''},
-  {n:'RMF24',h:'RMF24pl',id:''},
+  {n:'DW News',id:'UCknLrEdhRCp1aegoMqRaCZg'},
+  {n:'France 24',id:'UCQfwfsi5VrQ8yKZ-UWmAEFg'},
+  {n:'Al Jazeera',id:'UCNye-wNBqNL5ZzHSJj3l8Bg'},
   {n:'Euronews',id:'UCSrZ3UV4jOidv8ppoVuvW9Q'}
 ];
+// Wyczyść placeholder ID dla Webcamera, aby backend wyciągnął prawdziwy channelId z v=s0Z4b4S0mdk
+LIVE[0].id='';
 
 let lvSingle=-1,lvPlaying=new Set();
 try{const s=JSON.parse(localStorage.getItem('lv_on')||'[]');if(Array.isArray(s))lvPlaying=new Set(s)}catch(e){}
@@ -390,19 +401,14 @@ function ytWatchUrl(ch){
   return 'https://www.youtube.com';
 }
 
-async function resolveStream(ch,idx){
+async function resolveStream(ch){
   if(ch._resolved)return;
   ch._resolved=true;
-  const q=ch.v?'v='+ch.v:(ch.id?'h='+ch.id:'h='+ch.h);
+  const q=ch.v?'v='+ch.v:(ch.h?'h='+ch.h:'h='+ch.id);
   try{
     const j=await (await fetch('/api/live?'+q)).json();
     if(j.id)ch.id=j.id;
     if(j.vid)ch.vid=j.vid;
-    if(j.name&&!ch.v){
-      ch.n=j.name;
-      const lbl=$('wmt_'+idx);
-      if(lbl)lbl.textContent=j.name;
-    }
   }catch(e){}
 }
 
@@ -412,7 +418,7 @@ async function startCell(i,muted=true){
   lvPlaying.add(i);saveLv();
   const body=cell.querySelector('.wm-body');
   body.innerHTML='<div class="wm-off">Łączę '+ch.n+'…</div>';
-  await resolveStream(ch,i);
+  await resolveStream(ch);
   const src=ytEmbedUrl(ch,muted);
   if(!src){
     body.innerHTML='<a class="wm-off" href="'+ytWatchUrl(ch)+'" target="_blank" rel="noopener">Brak streamu · Otwórz YT →</a>';
@@ -448,8 +454,7 @@ function renderLiveGrid(){
     const hud=el('div','wm-hud');
     const tag=el('span','wm-tag');
     const dot=el('i','wm-dot'+(lvPlaying.has(i)?'':' off'));
-    const lbl=el('span','',ch.n);lbl.id='wmt_'+i;
-    tag.append(dot,lbl);
+    tag.append(dot,ch.n);
     const acts=el('div','wm-acts');
     const bSnd=el('button','','🔊');bSnd.title='Odtwórz z dźwiękiem (wycisza pozostałe)';
     bSnd.onclick=()=>{LIVE.forEach((_,k)=>{if(k!==i&&lvPlaying.has(k))startCell(k,true)});startCell(i,false)};
